@@ -1,0 +1,19 @@
+applications:
+  - name: myapp-argo-app
+    namespace: argocd
+    project: default
+    source:
+      repoURL: ${repo_url}
+      targetRevision: HEAD # Always the last commit in the repo
+      path: argo-project # Where app yaml files reside
+      directory:
+        recurse: true
+    destination:
+      server: https://kubernetes.default.svc # Internal service of K8s API server since Argo runs on the same cluster
+      namespace: myapp
+    syncPolicy:
+      automated:
+        prune: true # Automatic sync will not delete resources if false
+        selfHeal: ${self_heal}
+      syncOptions:
+        - CreateNamespace=true # If myapp namespace does not exist

@@ -1,0 +1,31 @@
+clusterName: "kind-nmr-test-projects-kind"
+globalConfig:
+  chat_gpt_token: <place-holder>
+  signing_key: <place-holder>
+  account_id: <place-holder>
+sinksConfig:
+- slack_sink:
+    name: main_slack_sink
+    slack_channel: sre-alerts
+    api_key: <place-holder>
+enablePrometheusStack: true
+runner:
+  sendAdditionalTelemetry: false
+rsa:
+  private: <place-holder>
+  public: <place-holder>
+
+# This part is added to use chatGPT
+playbookRepos:
+  chatgpt_robusta_actions:
+    url: "https://github.com/robusta-dev/kubernetes-chatgpt-bot.git"
+
+customPlaybooks:
+# Add the 'Ask ChatGPT' button to all Prometheus alerts
+- triggers:
+  - on_prometheus_alert: {}
+  actions:
+  - chat_gpt_enricher: {}
+  - logs_enricher: {}
+  - pod_oom_killer_enricher: {}
+  - stack_overflow_enricher: {}

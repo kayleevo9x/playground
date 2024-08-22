@@ -1,0 +1,1 @@
+k8s_path = "../local-kind-cluster/local-kind"

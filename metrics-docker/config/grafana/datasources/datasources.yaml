@@ -1,0 +1,40 @@
+apiVersion: 1
+datasources:
+  - access: proxy
+    basicAuth: false
+    jsonData:
+      httpHeaderName1: "X-Scope-OrgID"
+    secureJsonData:
+      httpHeaderValue1: "docker"
+    editable: true
+    isDefault: false
+    name: loki
+    type: loki
+    uid: loki
+    url: http://loki-gateway
+    version: 1
+
+  - access: proxy
+    basicAuth: false
+    editable: true
+    isDefault: true
+    name: prometheus
+    type: prometheus
+    uid: prometheus
+    url: http://prometheus:9090
+    version: 1
+
+  - access: proxy
+    basicAuth: false
+    editable: true
+    isDefault: false
+    name: humio
+    type: grafana-falconlogscale-datasource
+    uid: humio
+    url: https://cloud.us.humio.com
+    version: 1
+    jsonData:
+      defaultRepository: general
+      authenticateWithToken: true
+    secureJsonData:
+      accessToken: jAoaebWbR232S06GJOoW5aS5~vMemucW8Gr20K2ncwLHCnXYwoRZxj3r1uyfZjy4ybSb6

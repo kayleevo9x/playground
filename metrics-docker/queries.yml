@@ -1,0 +1,12 @@
+queries:
+  - query: |
+      @rawstring="*LinkAPI endpoint called*" | "/v1/*"
+      | groupBy(extrainfo.ApiOwnerId, function=[
+      {extrainfo.ResponseStatusCode = 200 
+      | count(as=status200)},
+      {statusextrainfo.ResponseStatusCodecode = 201 
+      | count(as=status201)}
+      ])
+    repo: general
+    interval: 1d
+    metric_name: nu_api_total_request
