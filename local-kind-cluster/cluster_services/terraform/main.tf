@@ -1,23 +1,24 @@
 provider "helm" {
   kubernetes {
-    config_path = "../local-kind-cluster/local-kind"
+    config_path = "../../local-kind"
   }
 }
 
 provider "kubernetes" {
-  config_path = "../local-kind-cluster/local-kind"
+  config_path = "../../local-kind"
 }
 
 terraform {
-  required_version = "1.8.1"
+  required_version = "= 1.8.1"
+
   required_providers {
     kubernetes = {
       source  = "hashicorp/kubernetes"
-      version = "= 2.31.0"
+      version = ">= 2.9.0"
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "= 2.14.0"
+      version = "> 2.0.0"
     }
   }
 }

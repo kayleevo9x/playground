@@ -1,0 +1,3 @@
+module "metrics" {
+  source = "./metrics/"
+}

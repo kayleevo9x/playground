@@ -16,4 +16,3 @@ kind-windows-amd64.sha256sum
 kind-darwin-amd64.sha256sum
 kind-darwin-arm64.sha256sum
 terraform-*
-local-kind-cluster/*
