@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "url-shortener"
 version = "0.1.0"
-description = ""
+description = "API to create short URL similar to bit.ly"
 authors = ["kayleevo9x <kayleevo9x@gmail.com>"]
 readme = "README.md"
 
@@ -11,8 +11,11 @@ requests = "2.32.3"
 fastapi = "0.112.1"
 pyshorteners = "1.0.1"
 sqlalchemy = "2.0.32"
-pydantic = "^2.8.2"
-pydantic-settings = "^2.4.0"
+pydantic = "2.8.2"
+pydantic-settings = "2.4.0"
+prometheus-client = "0.20.0"
+prometheus-fastapi-instrumentator = "7.0.0"
+psycopg2-binary = "2.9.9"
 
 
 [build-system]

@@ -1,4 +1,6 @@
 import os
+from os.path import dirname, abspath
+from typing import Optional, Union
 from pydantic import PostgresDsn, field_validator, ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -28,32 +30,30 @@ log_config = {
 
 
 class Settings(BaseSettings):
-    POSTGRES_SERVER: str
-    POSTGRES_PORT: str = "5432"
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    SQLALCHEMY_DATABASE_URI: PostgresDsn
+    POSTGRES_PORT: int = "5432"
+    POSTGRES_HOST: str = None
+    POSTGRES_USER: str = None
+    POSTGRES_PASSWORD: str = None
+    POSTGRES_DB: str = None
+    SQLALCHEMY_DATABASE_URI: Union[Optional[PostgresDsn], Optional[str]] = None
     ENABLE_METRICS: bool = True
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", extra="allow"
+        env_file=f"{dirname(abspath(__file__))}/.env", env_file_encoding="utf-8", extra="allow"
     )
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
     @classmethod
-    def assemble_db_connection(cls, v, values: ValidationInfo):
+    def assemble_db_connection(cls, v: Optional[str], values: ValidationInfo):
         if isinstance(v, str):
-            print("Loading SQLALCHEMY_DATABASE_URI from .docker.env file ...")
             return v
-        print("Creating SQLALCHEMY_DATABASE_URI from .env file ...")
         return PostgresDsn.build(
             scheme="postgresql",
             port=values.data["POSTGRES_PORT"],
             username=values.data["POSTGRES_USER"],
             password=values.data["POSTGRES_PASSWORD"],
-            host=values.data["POSTGRES_SERVER"],
-            path=f"{values.data["POSTGRES_DB"]}",
-        )
+            host=values.data["POSTGRES_HOST"],
+            path=f"{values.data["POSTGRES_DB"] or ''}",
+        ).unicode_string()
 
 
 settings = Settings()
