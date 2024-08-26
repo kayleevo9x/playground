@@ -2,10 +2,10 @@ from logging import getLogger
 from fastapi import APIRouter
 from sqlalchemy import text
 
-import url_shortener.config as config
+from url_shortener.config import settings
 from url_shortener.database.database import engine
 
-_LOGGER = getLogger(config.LOGGER_NAME)
+_LOGGER = getLogger(settings.LOGGER_NAME)
 
 router = APIRouter(prefix="/health")
 

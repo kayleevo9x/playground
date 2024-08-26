@@ -1,6 +1,6 @@
 from logging import getLogger
 import re
-import url_shortener.config as config
+from url_shortener.config import settings
 from pyshorteners import Shortener
 from sqlalchemy.orm import Session
 from url_shortener.database.schemas import ShortUrlCreate
@@ -8,7 +8,7 @@ from url_shortener.database.models import ShortURL
 from sqlalchemy.exc import SQLAlchemyError
 from fastapi import HTTPException
 
-_LOGGER = getLogger(config.LOGGER_NAME)
+_LOGGER = getLogger(settings.LOGGER_NAME)
 
 
 def create_short_url(db: Session, input_url: ShortUrlCreate) -> ShortURL:
@@ -21,6 +21,11 @@ def create_short_url(db: Session, input_url: ShortUrlCreate) -> ShortURL:
     try:
         short_url = Shortener().tinyurl.short(input_url.url)
         _LOGGER.debug(f"Short URL of {input_url.url} is: {short_url}")
+        result = db.query(ShortURL).filter(ShortURL.url == short_url).first()
+        if result:
+            raise HTTPException(
+                status_code=500, detail=f"{input_url.url} has already been generated"
+            )
         db_short_url = ShortURL(url=short_url, original_url=input_url.url)
         db.add(db_short_url)
         db.commit()
@@ -47,3 +52,22 @@ def search_original_url(db: Session, short_url: str) -> ShortURL:
 def get_short_urls(db: Session, skip: int = 0, limit: int = 100) -> list[ShortURL]:
     _LOGGER.debug("Return all existing URLs in DB")
     return db.query(ShortURL).offset(skip).limit(limit).all()
+
+
+def delete_short_url(db: Session, short_url: str):
+    result = db.query(ShortURL).filter(ShortURL.url == short_url).first()
+    if not result:
+        raise HTTPException(
+            status_code=404, detail="URL does not exist in the database"
+        )
+
+    try:
+        _LOGGER.debug(f"Deleting short URL id: {short_url}")
+        db.delete(result)
+        db.commit()
+    except SQLAlchemyError as e:
+        error_msg = f"Error deleting state. Message: {e}"
+        _LOGGER.debug(error_msg)
+        raise HTTPException(status_code=500, detail=error_msg)
+
+    return {"successful": True}

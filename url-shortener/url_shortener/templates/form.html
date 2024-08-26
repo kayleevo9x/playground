@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Short URL</title>
+    <script>
+        function submitForm(event, form_id, form_action) {
+            event.preventDefault(); // Prevent the default form submission
+            var shortUrl = document.getElementById('short_url').value;
+            var form = document.getElementById(form_id);
+            form.action = form_action + encodeURIComponent(shortUrl);
+            form.submit(); // Submit the form with the updated action URL
+        }
+    </script>
+</head>
+<body>
+    <h2>Create a Short URL</h2>
+    <form action="/generate/" method="post">
+        <label for="url">Enter URL:</label>
+        <input type="text" id="url" name="url" required>
+        <input type="submit" value="Shorten">
+    </form>
+    <br>
+    <h2>Search for Original URL</h1>
+    <form id="search_url" action="/search/" method="get" onsubmit="submitForm(event, 'search_url', '/search/')">
+        <label for="short_url">Enter Short URL:</label>
+        <input type="text" id="short_url" name="short_url" required>
+        <input type="submit" value="Search">
+    </form>
+    <br>
+    <h2>Fetch All URLs</h1>
+        <form action="/fetchall/" method="get">
+            <input type="submit" value="Fetch All">
+        </form>
+
+    <br>
+
+    {% if error_message %}
+    <p style="color: red;">Error: {{ error_message }}</p>
+    {% endif %}
+    {% if message %}
+    <p style="color: green;">Message: {{ message }}</p>
+    {% endif %}
+</body>
+</html>
