@@ -3,7 +3,6 @@ from pydantic import BaseModel
 
 class ShortUrlBase(BaseModel):
     url: str
-    original_url: str
 
 
 class ShortUrlCreate(ShortUrlBase):

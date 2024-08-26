@@ -1,5 +1,5 @@
 from .health import router as health_router, metadata as health_metadata
-from .generator import router as short_url_router
+from .url import router as short_url_router
 
 all_routers = [
     health_router,

@@ -6,6 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
 LOGGER_NAME = os.getenv("LOGGER_NAME", "url-shortener-log")
+API_DEV = os.getenv("API_DEV", False)
 
 log_config = {
     "version": 1,
@@ -38,7 +39,7 @@ class Settings(BaseSettings):
     SQLALCHEMY_DATABASE_URI: Union[Optional[PostgresDsn], Optional[str]] = None
     ENABLE_METRICS: bool = True
     model_config = SettingsConfigDict(
-        env_file=f"{dirname(abspath(__file__))}/.env", env_file_encoding="utf-8", extra="allow"
+        env_file=f"{dirname(dirname(abspath(__file__)))}/.env", env_file_encoding="utf-8", extra="allow"
     )
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
