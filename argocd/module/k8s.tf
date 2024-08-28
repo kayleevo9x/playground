@@ -4,6 +4,11 @@ resource "kubernetes_namespace" "this" {
   }
 }
 
+locals {
+  argocd_helm_values = {
+    argocd_cm_data = var.argocd_cm_data
+  }
+}
 resource "helm_release" "argocd" {
   name             = var.name
   namespace        = kubernetes_namespace.this.metadata[0].name
@@ -12,7 +17,7 @@ resource "helm_release" "argocd" {
   chart            = "argo-cd"
   # See https://artifacthub.io/packages/helm/argo/argo-cd for latest version(s)
   version = var.argo_helm_chart_version
-  values  = [file("${path.module}/templates/values.yaml")]
+  values  = [templatefile("${path.module}/templates/values.yaml", local.argocd_helm_values)]
   timeout = var.helm_timeout
 
   depends_on = [

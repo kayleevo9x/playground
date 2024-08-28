@@ -6,7 +6,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/kayleevo9x/playground/url-shortener-api
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "0.1.0"
 
@@ -28,3 +28,8 @@ autoscaling:
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
+
+envVars:
+  POSTGRES_HOST: "postgresql"
+  ENABLE_METRICS: True
+  LOG_LEVEL: "Info"

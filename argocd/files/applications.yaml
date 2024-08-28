@@ -1,5 +1,5 @@
 applications:
-  argocd-app-of-apps:
+  root-app:
     namespace: argocd
     additionalLabels: {}
     additionalAnnotations: {}

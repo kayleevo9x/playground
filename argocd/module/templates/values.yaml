@@ -79,6 +79,10 @@ configs:
     ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/status-badge/
     statusbadge.enabled: false
 
+  %{~if length(argocd_cm_data) != 0 ~}
+    ${indent(3, argocd_cm_data)}
+  %{~endif}
+
   # Argo CD RBAC policy configuration
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
   rbac:

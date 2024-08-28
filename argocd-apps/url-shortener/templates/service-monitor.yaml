@@ -1,0 +1,24 @@
+{{- if .Values.envVars.ENABLE_METRICS }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "url-shortener.fullname" . }}
+  labels:
+    {{- include "url-shortener.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "url-shortener.selectorLabels" . | nindent 4 }}
+
+  endpoints:
+  - interval: 30s
+    port: http
+    path: /metrics
+    params:
+      format: 
+        - prometheus
+    relabelings:
+    - sourceLabels:
+      - __meta_kubernetes_pod_host_ip
+      targetLabel: node_ip

@@ -35,6 +35,12 @@ variable "argocd_apps_helm_chart_version" {
 
 }
 
+variable "argocd_cm_data" {
+  description = "Additional configuration for ArgoCD configmap data. Please see https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml for details."
+  type        = string
+  default     = ""
+}
+
 variable "repository_secrets" {
   description = "Secrets to allow ArgoCD to access the repo"
   type = list(object({
