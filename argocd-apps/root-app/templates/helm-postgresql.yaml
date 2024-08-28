@@ -9,7 +9,7 @@ spec:
   destination:
     namespace: postgresql
     server: {{ .Values.spec.destination.server }}
-  project: root-app
+  project: argocd-app-of-apps
   source:
     path: argocd-apps/helm-postgresql
     repoURL: {{ .Values.spec.source.repoURL }}

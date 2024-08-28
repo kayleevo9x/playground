@@ -4,3 +4,51 @@ on:
     paths:
       - 'url-shortener/**'
       - '!url-shortener/**.md'
+
+env:
+  POETRY_VERSION: "1.8.3"
+  GHCR: ghcr.io/kayleevo9x/playground/url-shortener-api
+  IMAGE_NAME: url-shortener-api
+
+job: 
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: url-shortener
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Poetry
+      uses: abatilo/actions-poetry@v3.0.0
+      with:
+        poetry-version: ${{ env.POETRY_VERSION }}
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Build Docker image
+      id: docker-build
+      run: |
+        version=$(poetry version --short)
+        echo "app_version=$version" >> $GITHUB_OUTPUT
+        docker build -t ${{ env.GHCR }}/${{ env.IMAGE_NAME }}:$version --target main .
+
+    - name: Push Docker image
+      run: docker push ${{ env.GHCR }}/${{ env.IMAGE_NAME }}:$version
+
+    - name: Update app version in url-shortener Chart.yaml
+      run: |
+        sed -i 's|appVersion:.*|appVersion: '${{ steps.docker-build.outputs.app_version }}'|' Chart.yaml 
+        git config --global user.name 'GitHub Actions'
+        git config --global user.email 'actions@github.com'
+        git add Chart.yaml
+        git commit -m "Update app version in Chart.yaml"
+        git push
+        echo "pushed automated updates"
+
+      working-directory: ${{ github.workspace }}/argocd-apps/url-shortener
