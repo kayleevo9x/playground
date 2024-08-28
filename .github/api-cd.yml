@@ -1,0 +1,6 @@
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'url-shortener/**'
+      - '!url-shortener/**.md'

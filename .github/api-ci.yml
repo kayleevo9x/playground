@@ -1,0 +1,19 @@
+name: Python API CI
+
+on:
+  push:
+    branches: [ develop ]
+    paths:
+      - 'url-shortener/**'
+      - '!url-shortener/**.md'
+
+  # jobs:
+  #   lint:
+  #     runs-on: ubuntu-latest
+  #     defaults:
+  #       run:
+  #         working-directory: backend
+  #     strategy:
+  #       max-parallel: 4
+  #       matrix:
+  #         python-version: [3.9]

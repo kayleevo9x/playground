@@ -1,5 +1,7 @@
 # playground
 
+***Notes: Repo is still working in progress, additional features, documentations will be added in the coming days***
+
 Playground projects dedicated for personal showcases and experimental projects in a local Kind Kubernetes cluster
 
 ## Project Desciption
@@ -21,7 +23,8 @@ The project is created to demonstrate a Devops oriented solution to automaticall
 
 ### Project Details
 1. Install local Kind Kubenertes Cluster using `./local-kind-cluster/start-cluster.sh` 
-- It will also pre-install a metrics stack comprising of `Prometheus`, `Grafana` and `AlertManager` that are browsable at
+The project will also pre-install a metrics stack comprising of `Prometheus`, `Grafana` and `AlertManager` that are browsable at
 - Prometheus Console: [http://localhost/prometheus/](http://localhost/prometheus/)
 - Grafana Dashboard: [http://localhost/grafana/](http://localhost/grafana/)
- 
+
+and `Nginx Ingress Controller` for Kind

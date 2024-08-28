@@ -1,15 +1,7 @@
 resource "kubernetes_namespace" "this" {
   metadata {
-    name = var.name
+    name = var.namespace
   }
-}
-
-locals {
-  argo_app_values_vars = {
-    repo_url = var.repo_url
-    self_heal = var.self_heal
-  }
-  argo_app_helm_values = templatefile("${path.module}/templates/applications.yaml", local.argo_app_values_vars)
 }
 
 resource "helm_release" "argocd" {
@@ -19,8 +11,8 @@ resource "helm_release" "argocd" {
   repository       = "https://argoproj.github.io/argo-helm"
   chart            = "argo-cd"
   # See https://artifacthub.io/packages/helm/argo/argo-cd for latest version(s)
-  version = "5.16.9"
-  values = [file("${path.module}/templates/values-override.yaml")]
+  version = var.argo_helm_chart_version
+  values  = [file("${path.module}/templates/values.yaml")]
   timeout = var.helm_timeout
 
   depends_on = [
@@ -30,15 +22,15 @@ resource "helm_release" "argocd" {
 }
 
 resource "helm_release" "argocd-apps" {
-  depends_on       = [helm_release.argocd]
-  chart            = "argocd-apps"
-  name             = "argocd-apps"
-  namespace        = "argocd"
-  create_namespace = false
+  count     = var.argocd_apps_enabled ? 1 : 0
+  chart     = "argocd-apps"
+  name      = "argocd-apps"
+  namespace = var.namespace
+  timeout   = var.helm_timeout
 
   repository = "https://argoproj.github.io/argo-helm"
-  version    = "0.0.6"
-  values = [
-    local.argo_app_helm_values
-  ]
+  version    = var.argocd_apps_helm_chart_version
+  values     = [var.argocd_apps_helm_values]
+
+  depends_on = [helm_release.argocd]
 }

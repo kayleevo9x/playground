@@ -15,7 +15,8 @@ services:
       - db-data:/var/lib/postgresql/data
     shm_size: 256M
 
-  # proxy-api:
+  ## Uncomment to start the api using docker-compose 
+  # api:
   #   build:
   #     context: .
   #     dockerfile: ./Dockerfile
@@ -25,18 +26,15 @@ services:
   #   env_file:
   #     - .env
   #   environment:
-  #     - REDIS_URL=redis://sproxy-redis:6379
-  #     - POSTGRES_HOST=sproxy-postgresql
+  #     - POSTGRES_HOST=postgresql
   #   depends_on:
-  #     sproxy-postgresql:
+  #     postgresql:
   #       condition: service_healthy
   #   ports:
   #     - "8000:8000"
   #   volumes:
   #     - .:/var/task:cached
   #     - .cache:/tmp/pip/cache:cached
-  #   networks:
-  #     - sproxy-net
 
 volumes:
   db-data:

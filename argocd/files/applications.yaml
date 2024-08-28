@@ -1,0 +1,36 @@
+applications:
+  argocd-app-of-apps:
+    namespace: argocd
+    additionalLabels: {}
+    additionalAnnotations: {}
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    project: argocd-app-of-apps
+    source:
+      repoURL: https://github.com/kayleevo9x/playground.git
+      targetRevision: HEAD # Always the last commit in the repo
+      path: argocd-apps/root-app
+      directory:
+        recurse: true
+    destination:
+      server: https://kubernetes.default.svc # Internal service of K8s API server since Argo runs on the same cluster
+    syncPolicy:
+      automated:
+        prune: true # Automatic sync will not delete resources if false
+        selfHeal: true # Automatic sync to roll back manual changes done on cluster
+      syncOptions:
+        - CreateNamespace=true 
+    info:
+    - name: url
+      value: https://argoproj.github.io/
+
+projects:
+  argocd-app-of-apps:
+    namespace: argocd
+    finalizers:
+    - resources-finalizer.argocd.argoproj.io
+    description: Example API Projects
+    sourceRepos:
+    - https://github.com/kayleevo9x/playground
+    sourceNamespaces:
+    - argocd
