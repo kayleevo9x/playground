@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
 set -e
 
-USAGE_STRING="Usage: build-push-docker.sh -t <tag name>"
+USAGE_STRING="Usage: build-push-docker.sh -t <tag name> -r <registry repo name> -u <registry user>. Ensure GITHUB_TOKEN is set for authentication to GHCR"
 
-# Deal with args
 while getopts ":t:" opt; do
   case ${opt} in
     t )
       TAG="${OPTARG}"
+      ;;
+    r )
+      REPO="${OPTARG}"
+      ;;
+    u )
+      USER="${OPTARG}"
       ;;
     \? ) echo "${USAGE_STRING}"
          exit -1
@@ -16,8 +21,11 @@ while getopts ":t:" opt; do
 done
 
 TAG=${TAG:-"latest"}
-echo $CR_PAT | docker login ghcr.io -u kayleevo9x --password-stdin
+REPO=${REPO:-"kayleevo9x/playground"}
+USER=${USER:-"kayleevo9x"}
+export CR_PATH=$GITHUB_TOKEN
+echo $CR_PAT | docker login ghcr.io -u $USER --password-stdin
 docker build \
   -t url-shortener-api:$TAG --platform "linux/amd64" --target main .
-docker tag url-shortener-api:$TAG ghcr.io/kayleevo9x/playground/url-shortener-api:$TAG
-docker push ghcr.io/kayleevo9x/playground/url-shortener-api:$TAG
+docker tag url-shortener-api:$TAG ghcr.io/$REPO/url-shortener-api:$TAG
+docker push ghcr.io/$REPO/url-shortener-api:$TAG

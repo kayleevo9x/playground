@@ -11,7 +11,7 @@ A simple web API to generate a short URL from a full URL and store it in a Postg
 
 ## Local Developments
 - Ensure poetry is installed
-- Ensure `.env` exists in root `url-shortener` 
+- Rename `.env.dev` to `.env` to load required environment variables
 
 ## Create Virtual Environment:
 Run the following command from the root `url-shortener`:
@@ -56,3 +56,21 @@ This option facilitates a quick local testing without having to run multiple dif
 During the development phase, various data may be added to the database and stored in the specified Docker volumes. To reset this data, run the following command to remove the containers and also destroy the volumes.
 
     docker-compose down --volume
+
+## Docker
+This project uses Github Container Registry (GCR) to store the the image
+
+Set `GITHUB_TOKEN` environment varible in the console to access the target GCR
+    export GITHUB_TOKEN=<PAT>
+
+Run the following script to build and push the image as needed
+    `./docker-build-push.sh` -t <tag> -r <registry repo name> -u <registry username>`
+
+On success, a package should be available in the target GRC
+![](../docs/images/package.png)
+
+## CI/CD
+Once development work is done, run `poetry version <new version>` to upgrade the app version in `pyproject.toml`. CICD will use this version to update the API deployment helmchart
+Create a PR for the change
+[api-ci.yml](../.github/api-ci.yml) is triggered on PR creation to run `lint` and `test`
+[api-cd.yml](../.github/api-cd.yml) is triggered on PR merged to build and push the Docker image to Github container registry of the repo

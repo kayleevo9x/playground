@@ -4,27 +4,75 @@
 
 Playground projects dedicated for personal showcases and experimental projects in a local Kind Kubernetes cluster
 
+## Requirements
+```
+- python 3.12+
+- docker 
+- poetry 1.8.3+
+- terraform
+```
+
 ## Project Desciption
 
-The project is created to demonstrate a Devops oriented solution to automatically deploy a REST API on a local Kubernetes Cluster with observability and auto-scaling ability
+The project is created to demonstrate a Devops oriented solution to automatically build and deploy a REST API on a local Kubernetes Cluster with observability and auto-scaling ability
 
-![](/docs/images/project.png)
+![Project Description](/docs/images/project.png)
 
-## Technologies 
+### Technologies 
 
 - [KinD](https://kind.sigs.k8s.io/) - local Kubernetes Cluster
 - [Prometheus](https://prometheus.io/) - observability
 - [Github Actions](https://docs.github.com/en/actions) - CI to test, build and push images
 - [Docker](https://www.docker.com/) - Containers packaging 
-- [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) for CD
+- [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) - CD to deploy and sync applications
 - [Helm](https://helm.sh/) to manage Kubernetes deployments
 - [Terraform](https://developer.hashicorp.com/terraform) - Infrastructure as Code
 - [Python](https://www.python.org/) - FastAPI application scripting
+- [Postgresql](https://www.postgresql.org/) - Database
+
 
 ### Project Details
-1. Install local Kind Kubenertes Cluster using `./local-kind-cluster/start-cluster.sh` 
-The project will also pre-install a metrics stack comprising of `Prometheus`, `Grafana` and `AlertManager` that are browsable at
-- Prometheus Console: [http://localhost/prometheus/](http://localhost/prometheus/)
-- Grafana Dashboard: [http://localhost/grafana/](http://localhost/grafana/)
 
-and `Nginx Ingress Controller` for Kind
+| Project | Description |
+|-------------|-------------|
+| [local-kind-cluster](/local-kind-cluster/) | Stand up a local Kind Kubernetes cluster and pre-install base features for a successful deployment |
+| [url-shortener](/url-shortener/) | My simple web API to generate a short URL from a full URL and store it in a Postgressql database for demonstration purposes |
+| [argocd](/argocd/) | Install argoCD into the local kind cluster and hook it up with [argocd-apps](/argocd-apps/) to deploy and sync the web API application |
+| [argocd-apps](/argocd-apps/) | Contain helm charts to deploy postgresql and web API app using ArgoCD app-of-apps pattern |
+
+***Notes: Each of the project should have its own README.md for additional details***
+
+### Instructions
+Please feel free to fork the repo to explore the full solution including Github Actions and ArgoCD for CI/CD
+Or just simply clone the repo and follow the below instructions to explore Kubenertes, k8s resources deployments and ArgoCD in action
+
+1. Install local Kind Kubenertes Cluster using `./local-kind-cluster/start-cluster.sh` 
+The project will also pre-install the following:
+- Prometheus: [http://localhost/prometheus/](http://localhost/prometheus/)
+- Grafana: [http://localhost/grafana/](http://localhost/grafana/)
+- `Nginx Ingress Controller` for Kind
+- Secrets to be used by Postgresql and web API deployments
+
+2. Build and push web API docker image to Github Container Registry
+Navigate to `/url-shortener` to build and push the web API docker image to your GCR or modify the script to push to other registry of your choice
+Set `GITHUB_TOKEN` environment varible in the console to access the target GCR
+    export GITHUB_TOKEN=<PAT>
+
+Run the following script to build and push the image
+
+    tag=$(poetry version --short)
+    ./docker-build-push.sh` -t $tag -r <registry repo name> -u <registry username>
+
+On success, a package should be available in the target GRC
+![](/docs/images/package.png)
+
+3. Deploy ArgoCD for CD solution and connect it to the api deployment helm charts
+ArgoCD supports different method to connect to a particular repo such as using `ssh`, `https` or `github app`. For this demonstration, we will use github App
+- Click on Github Profile on the top right corner > Settings > Developer setting > Github Apps > New Github App
+- Fill in the `Github App name`, Homepage URL for your personal website, if not available, use your github URL
+- Select repository permissions: `Contents: Read Write`. Permission can be adjusted afterward as needed
+- Rename the `pem` file to `argocdplayground.private-key.pem` and save the private key in `/files` 
+- Run `terraform apply` to start deploying argoCD into the local k8s cluster
+
+On successful deployment
+<TODO>

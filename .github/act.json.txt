@@ -1,0 +1,25 @@
+# Rename this file to act.json and remove comments
+# The following example is to imitate pull request trigger
+# act pull_request -e act.json -j build-and-deploy 
+# or simply run act -j <job_name> to run a particular job 
+# act -l to list all jobs
+
+
+{
+    "pull_request": {
+      "head": {
+        "ref": "develop"
+      },
+      "base": {
+        "ref": "main"
+      }
+    },
+}
+
+# Working with artifact locally
+# If you are using nektos/act with actions/upload-artifact and actions/download-artifact, artifact server is already implemented in act 
+# To be able to download or upload artifact locally, we can run act with --artifact-server-path where you want to store the artifacts.
+# mkdir /tmp/artifacts
+# act pull_request -e act.json --artifact-server-path /tmp/artifacts
+# The artifact will then be downloaded in the specified path on your local machine
+# You can also add --artifact-server-path /tmp/artifacts in the local .actrc file so you do not need to specify argument every time in the terminal
