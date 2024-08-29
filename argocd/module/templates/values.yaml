@@ -28,25 +28,13 @@ global:
     # -- Set the global logging level. One of: `debug`, `info`, `warn` or `error`
     level: info
 
-  # -- Annotations for the all deployed Statefulsets
-  statefulsetAnnotations: {}
-
-  # -- Annotations for the all deployed Deployments
-  deploymentAnnotations: {}
-
-  # -- Annotations for the all deployed pods
-  podAnnotations: {}
-
-  # -- Labels for the all deployed pods
-  podLabels: {}
-
-  # -- Environment variables to pass to all deployed Deployments
-  env: []
+  domain: ""
 
 ## Argo Configs
 configs:
   # General Argo CD configuration
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cm.yaml
+
   cm:
     # -- Create the argocd-cm configmap for [declarative setup]
     create: true
@@ -79,9 +67,41 @@ configs:
     ## Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/status-badge/
     statusbadge.enabled: false
 
-  %{~if length(argocd_cm_data) != 0 ~}
-    ${indent(3, argocd_cm_data)}
-  %{~endif}
+  %{~ if length(argocd_cm_data) != 0 ~}
+    ${indent(4, argocd_cm_data)}
+  %{~endif~}
+  # Argo CD configuration parameters
+  ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/argocd-cmd-params-cm.yaml
+  params:
+    # -- Create the argocd-cmd-params-cm configmap
+    # If false, it is expected the configmap will be created by something else.
+    create: true
+
+    # -- Annotations to be added to the argocd-cmd-params-cm ConfigMap
+    annotations: {}
+
+    ## Generic parameters
+    # -- Open-Telemetry collector address: (e.g. "otel-collector:4317")
+    otlp.address: ''
+
+    ## Controller Properties
+    # -- Number of application status processors
+    controller.status.processors: 20
+    # -- Number of application operation processors
+    controller.operation.processors: 10
+    # -- Specifies timeout between application self heal attempts
+    controller.self.heal.timeout.seconds: 5
+    # -- Repo server RPC call timeout seconds.
+    controller.repo.server.timeout.seconds: 60
+
+    ## Server properties
+    # -- Run server without TLS
+    ## NOTE: This value should be set when you generate params by other means as it changes ports used by ingress template.
+    server.insecure: true
+    # -- Value for base href in index.html. Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.basehref: /
+    # -- Used if Argo CD is running behind reverse proxy under subpath different from /
+    server.rootpath: 'argocd'
 
   # Argo CD RBAC policy configuration
   ## Ref: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/rbac.md
@@ -1034,7 +1054,7 @@ server:
     hostname: ""
 
     # -- The path to Argo CD server
-    path: /server/
+    path: /argocd/
 
     # -- Ingress path type. One of `Exact`, `Prefix` or `ImplementationSpecific`
     pathType: Prefix
@@ -1059,23 +1079,6 @@ repoServer:
     targetCPUUtilizationPercentage: 50
     # -- Average memory utilization percentage for the repo server [HPA]
     targetMemoryUtilizationPercentage: 50
-    # -- Configures the scaling behavior of the target in both Up and Down directions.
-    behavior: {}
-      # scaleDown:
-      #  stabilizationWindowSeconds: 300
-      #  policies:
-      #   - type: Pods
-      #     value: 1
-      #     periodSeconds: 180
-      # scaleUp:
-      #   stabilizationWindowSeconds: 300
-      #   policies:
-      #   - type: Pods
-      #     value: 2
-      #     periodSeconds: 60
-    # -- Configures custom HPA metrics for the Argo CD repo server
-    # Ref: https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-    metrics: []
 
   ## Repo server Pod Disruption Budget
   ## Ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
@@ -1092,28 +1095,6 @@ repoServer:
     # -- Number of pods that are unavailable after eviction as number or percentage (eg.: 50%).
     ## Has higher precedence over `repoServer.pdb.minAvailable`
     maxUnavailable: ""
-
-  ## Repo server image
-  image:
-    # -- Repository to use for the repo server
-    # @default -- `""` (defaults to global.image.repository)
-    repository: ""
-    # -- Tag to use for the repo server
-    # @default -- `""` (defaults to global.image.tag)
-    tag: ""
-    # -- Image pull policy for the repo server
-    # @default -- `""` (defaults to global.image.imagePullPolicy)
-    imagePullPolicy: ""
-
-  # -- Secrets with credentials to pull images from a private registry
-  # @default -- `[]` (defaults to global.imagePullSecrets)
-  imagePullSecrets: []
-
-  # -- Additional command line arguments to pass to repo server
-  extraArgs: []
-
-  # -- Environment variables to pass to repo server
-  env: []
 
   # -- envFrom to pass to repo server
   # @default -- `[]` (See [values.yaml])
@@ -1170,66 +1151,6 @@ repoServer:
     #     # mitigate path traversal attacks.
     #     - mountPath: /tmp
     #       name: cmp-tmp
-
-  # -- Init containers to add to the repo server pods
-  initContainers: []
-
-  # -- Additional volumeMounts to the repo server main container
-  volumeMounts: []
-
-  # -- Additional volumes to the repo server pod
-  volumes: []
-  #  - name: argocd-cmp-cm
-  #    configMap:
-  #      name: argocd-cmp-cm
-  #  - name: cmp-tmp
-  #    emptyDir: {}
-
-  # -- Volumes to be used in replacement of emptydir on default volumes
-  existingVolumes: {}
-  #  gpgKeyring:
-  #    persistentVolumeClaim:
-  #      claimName: pvc-argocd-repo-server-keyring
-  #  helmWorkingDir:
-  #    persistentVolumeClaim:
-  #      claimName: pvc-argocd-repo-server-workdir
-  #  tmp:
-  #    persistentVolumeClaim:
-  #      claimName: pvc-argocd-repo-server-tmp
-  #  varFiles:
-  #    persistentVolumeClaim:
-  #      claimName: pvc-argocd-repo-server-varfiles
-  #  plugins:
-  #    persistentVolumeClaim:
-  #      claimName: pvc-argocd-repo-server-plugins
-
-  ## RepoServer emptyDir volumes
-  emptyDir:
-    # -- EmptyDir size limit for repo server
-    # @default -- `""` (defaults not set if not specified i.e. no size limit)
-    sizeLimit: ""
-    # sizeLimit: "1Gi"
-
-  # -- Toggle the usage of a ephemeral Helm working directory
-  useEphemeralHelmWorkingDir: true
-
-  # -- Annotations to be added to repo server Deployment
-  deploymentAnnotations: {}
-
-  # -- Annotations to be added to repo server pods
-  podAnnotations: {}
-
-  # -- Labels to be added to repo server pods
-  podLabels: {}
-
-  # -- Resource limits and requests for the repo server pods
-  resources: {}
-  #  limits:
-  #    cpu: 50m
-  #    memory: 128Mi
-  #  requests:
-  #    cpu: 10m
-  #    memory: 64Mi
 
   # Repo server container ports
   containerPorts:
@@ -1417,12 +1338,12 @@ repoServer:
     automountServiceAccountToken: true
 
   # -- Repo server rbac rules
-  rbac: []
-  #   - apiGroups:
-  #     - argoproj.io
-  #     resources:
-  #     - applications
-  #     verbs:
-  #     - get
-  #     - list
-  #     - watch
+  rbac:
+    - apiGroups:
+      - argoproj.io
+      resources:
+      - applications
+      verbs:
+      - get
+      - list
+      - watch

@@ -1,6 +1,6 @@
 #!/bin/bash
-echo "Deloy nginx ingress"
+echo "Terraform prerequisites"
 cd cluster_services/terraform
 terraform init
 terraform apply -auto-approve
-echo "Deloy nginx ingress"
+echo "Finish Terraform prerequisites"

@@ -34,3 +34,18 @@ projects:
     - https://github.com/kayleevo9x/playground
     sourceNamespaces:
     - argocd
+    destinations:
+    - server: https://kubernetes.default.svc
+      name: in-cluster
+      namespace: "*"
+    clusterResourceWhitelist:
+    - group: ''
+      kind: Namespace
+    - group: ''
+      kind: PersistentVolumeClaim
+    - group: ''
+      kind: PersistentVolume
+
+    namespaceResourceWhitelist:
+    - group: '*'
+      kind: '*'

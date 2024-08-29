@@ -1,6 +1,2 @@
-spec:
-  destination:
-    server: https://kubernetes.default.svc
-  source:
-    repoURL: https://github.com/kayleevo9x/playground.git
-    targetRevision: HEAD
+
+repoURL: https://github.com/kayleevo9x/playground.git

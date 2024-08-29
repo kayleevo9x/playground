@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  destination:
+    namespace: postgresql
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true # Automatic sync will not delete resources if false
+      selfHeal: true # Automatic sync to roll back manual changes done on cluster
+    syncOptions:
+      - CreateNamespace=true
+  project: argocd-app-of-apps
+  source:
+    path: argocd-apps/postgresql
+    repoURL: https://github.com/kayleevo9x/playground.git
+    targetRevision: HEAD
