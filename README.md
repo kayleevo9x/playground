@@ -96,3 +96,11 @@ On successful deployment
 username: admin
 password: Run this command - kubectl -n argocd get secret argocd-initial-admin-secret -o json | jq -r '.data["password"]' | base64 -d
 ```
+
+- Assume that your ArgoCD instance successfully connects to the target repo, the applications should automatically be deployed
+
+![](/docs/images/deployed_app_of_apps.png)
+
+- The simple url shortener web API will be accessible at http://localhost/app
+
+![](/docs/images/api.png)

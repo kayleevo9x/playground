@@ -4,7 +4,7 @@ This project stores a example that uses the [app-of-apps](https://argo-cd.readth
 
 | Application | Description |
 |-------------|-------------|
-| [guestbook](guestbook/) | A hello word guestbook app from ArgoCD example repo |
+| [postgresql](postgresql/) | Postgresql database |
 | [url-shortener](url-shortener/) | My simple web API to generate a short URL from a full URL and store it in a Postgressql database for demonstration purposes |
 
 ![ArgoCD UI showing applications deployed using the app-of-apps pattern](../docs/deployed_app_of_apps.png)
