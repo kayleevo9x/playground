@@ -12,7 +12,7 @@ image:
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8000
 
 ingress:
   enabled: true
@@ -30,6 +30,8 @@ autoscaling:
   targetCPUUtilizationPercentage: 80
 
 envVars:
-  POSTGRES_HOST: "postgresql"
-  ENABLE_METRICS: True
-  LOG_LEVEL: "Info"
+  POSTGRES_HOST: postgresql.postgresql.svc.cluster.local
+  LOG_LEVEL: INFO
+
+serviceAccount: 
+  create: True

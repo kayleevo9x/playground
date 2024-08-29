@@ -20,5 +20,5 @@ spec:
   project: argocd-app-of-apps
   source:
     path: argocd-apps/url-shortener
-    repoURL: {{ .Values.repoURL }}
+    repoURL: https://github.com/kayleevo9x/playground.git
     targetRevision: HEAD

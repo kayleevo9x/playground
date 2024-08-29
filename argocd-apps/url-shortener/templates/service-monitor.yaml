@@ -1,5 +1,4 @@
 {{- if .Values.envVars.ENABLE_METRICS }}
----
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -9,7 +8,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      {{- include "url-shortener.selectorLabels" . | nindent 4 }}
+      {{- include "url-shortener.selectorLabels" . | nindent 5 }}
 
   endpoints:
   - interval: 30s
@@ -22,3 +21,5 @@ spec:
     - sourceLabels:
       - __meta_kubernetes_pod_host_ip
       targetLabel: node_ip
+
+{{end}}
