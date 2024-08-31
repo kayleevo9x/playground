@@ -18,9 +18,9 @@ env:
 
 jobs:
   lint:
-    permissions:
-      pull-requests: write
+    permissions: 
       contents: read
+      checks: write
     runs-on: ubuntu-latest
     name: Linter
     defaults:
@@ -34,10 +34,12 @@ jobs:
       with:
         python-version: ${{ env.PYTHON_VERSION }}
 
-    - name: Run Linter
+    - name: Run Linter  
       uses: reviewdog/action-flake8@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
+        flake8_args: "--count --show-source --statistics"
+        fail_on_error: true
 
   # TODO
   # test:
