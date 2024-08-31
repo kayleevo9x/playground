@@ -1,7 +1,5 @@
 # playground
 
-***Notes: Repo is still working in progress, additional features, documentations will be added in the coming days***
-
 Playground projects dedicated for personal showcases and experimental projects in a local Kind Kubernetes cluster
 
 ## Requirements
@@ -61,6 +59,10 @@ The project will also pre-install the following:
 - `Nginx Ingress Controller` for Kind
 - Secrets to be used by Postgresql and web API deployments
 
+Set kubeconfig to access the cluster
+
+    export KUBECONFIG=./local-kind
+
 2. Build and push web API docker image to Github Container Registry
 Navigate to `/url-shortener` to build and push the web API docker image to your GCR or modify the script to push to other registry of your choice
 Set `GITHUB_TOKEN` environment varible in the console to access the target GCR
@@ -78,7 +80,7 @@ On success, a package should be available in the target GRC
 ![](/docs/images/package.png)
 
 3. Deploy ArgoCD for CD solution and connect it to the api deployment helm charts
-ArgoCD supports different method to connect to a particular repo such as using `ssh`, `https` or `github app`. For this demonstration, we will use github App
+ArgoCD supports different methods to connect to a particular repo such as using `ssh`, `https` or `github app`. For this demonstration, we will use Github App
 - Click on Github Profile on the top right corner > Settings > Developer setting > Github Apps > New Github App
 - Fill in the `Github App name`, Homepage URL for your personal website, if not available, use your github URL
 - Select repository permissions: `Contents: Read Write`. Permission can be adjusted afterward as needed
@@ -104,3 +106,18 @@ password: Run this command - kubectl -n argocd get secret argocd-initial-admin-s
 - The simple url shortener web API will be accessible at http://localhost/app
 
 ![](/docs/images/api.png)
+
+4. CI/CD solution
+`Github Actions` is used for CI solution 
+
+- [api-ci-on-pr.yml](../.github/api-ci-on-pr.yml) is triggered on PR creation to run `lint` and `test` the code. If there's failure, the details should be available from the PR
+
+![](/docs/images/lint-failure.png)
+
+- [api-ci-on-push.yml](../.github/api-ci-on-push.yml) is triggered on PR merged to build and push the Docker image to Github container registry of the repo. The action will then update the [url-shortener Chart yaml](./argocd-apps/url-shortener/Chart.yaml) version number. ArgoCD will automatically detects the update and sync the change
+
+![](/docs/images/argo-cd.png)
+
+Application should then run with the new image version
+
+![](/docs/images/new-image.png)
