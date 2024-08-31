@@ -1,0 +1,45 @@
+name: Python API CI
+
+on:
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'url-shortener/**'
+      - '!url-shortener/**.md'
+
+env:
+  POSTGRES_USER: local
+  POSTGRES_PASSWORD: local
+  POSTGRES_DB: app
+  POSTGRES_PORT: 5432
+  POSTGRES_HOST: localhost
+  PYTHON_VERSION: "3.12"
+  POETRY_VERSION: "1.8.3"
+
+jobs:
+  lint:
+    permissions: 
+      contents: read
+      checks: write
+    runs-on: ubuntu-latest
+    name: Linter
+    defaults:
+      run:
+        working-directory: url-shortener
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Run Linter  
+      uses: reviewdog/action-flake8@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        flake8_args: "--count --show-source --statistics"
+        fail_on_error: true
+
+  # TODO
+  # test:
