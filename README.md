@@ -86,7 +86,7 @@ ArgoCD supports different method to connect to a particular repo such as using `
 - Run `terraform apply` to start deploying argoCD into the local k8s cluster
 
 On successful deployment
-- ArgoCD is accessible at http://localhost/argocd
+- ArgoCD is accessible at http://localhost/argocd/
 
 ![](/docs/images/argo.png)
 
