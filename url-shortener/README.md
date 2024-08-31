@@ -10,7 +10,7 @@ A simple web API to generate a short URL from a full URL and store it in a Postg
 ```
 
 ## Local Developments
-- Ensure poetry is installed
+- Ensure poetry is installed `pip install poetry` 
 - Rename `.env.dev` to `.env` to load required environment variables
 
 ## Create Virtual Environment:

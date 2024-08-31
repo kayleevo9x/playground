@@ -33,18 +33,11 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: ${{ env.PYTHON_VERSION }}
-    - name: Lint with flake8 for syntax errors or undefined names
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8
-        # stop the build if there are Python syntax errors or undefined names
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-    - name: Run linter and comment PR
-      uses: matias-martini/flake8-pr-comments-action@main
+    - name: Run Linter
+      uses: reviewdog/action-flake8@v3
       with:
-        github_token: ${{ github.token }}
-        cfg_path: .flake8
+        github_token: ${{ secrets.GITHUB_TOKEN }}
 
   # TODO
   # test:

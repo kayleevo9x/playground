@@ -3,7 +3,6 @@ from typing import Optional, Union
 from pydantic import PostgresDsn, field_validator, ValidationInfo
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-
 class Settings(BaseSettings):
     POSTGRES_PORT: int = "5432"
     POSTGRES_HOST: str = None
