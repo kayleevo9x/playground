@@ -25,7 +25,7 @@ jobs:
     name: Linter
     defaults:
       run:
-        working-directory: url-shortener
+        working-directory: applications/url-shortener
 
     steps:
     - uses: actions/checkout@v4

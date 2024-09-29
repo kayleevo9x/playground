@@ -4,8 +4,8 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'url-shortener/**'
-      - '!url-shortener/**.md'
+      - 'applications/url-shortener/**'
+      - '!applications/url-shortener/**.md'
 
 env:
   POETRY_VERSION: "1.8.3"
@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: url-shortener
+        working-directory: applications/url-shortener
 
     steps:
     - uses: actions/checkout@v4
@@ -58,4 +58,4 @@ jobs:
         git push
         echo "pushed automated updates"
 
-      working-directory: ${{ github.workspace }}/argocd-apps/url-shortener
+      working-directory: ${{ github.workspace }}/playground-k8s/argocd-apps/url-shortener
