@@ -1,0 +1,16 @@
+# TODO: run test
+# pr:
+#   branches: 
+#     include: 
+#     - main
+#   paths: # File paths to include or exclude for triggering a run.
+#     include: 
+#     - applications/HelloWorldApp
+#   drafts: false
+
+# pool:
+#   vmImage: ubuntu-latest
+  
+# stages: 
+# - stage: UnitTest
+#   displayName: Run Unit Test

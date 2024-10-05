@@ -1,0 +1,48 @@
+trigger:
+  batch: true
+  branches:
+    include:
+      - main
+  paths:
+    include:
+    - applications/HelloWorldApp
+
+pool:
+  vmImage: ubuntu-latest
+
+variables: 
+  - name: dockerFilePath
+    value: $(Build.SourceDirectory)/applications/HelloWorldApp/Dockerfile
+  - name: imageRepo
+    value: kayleevo9x/playground/helloworld-asp-api
+  - name: dockerRegistry
+    value: playgroundGithubRegistry
+
+stages:
+- stage: BuildPush
+  displayName: Build and Push Docker Image
+  jobs:
+  - job: BuildPush
+    steps:
+    - task: Docker@2
+      inputs:
+        command: 'login'
+        containerRegistry: $(dockerRegistry)        
+      displayName: Docker Login
+
+    - bash: |
+        TAG=dev-$(git rev-parse --short HEAD)
+        echo "##vso[task.setvariable variable=tag;isOutput=true]$TAG"
+      name: getTag
+      displayName: Get Short Commit SHA
+
+    - task: Docker@2
+      inputs:
+        command: 'buildAndPush'
+        Dockerfile: $(dockerFilePath)
+        buildContext: $(System.DefaultWorkingDirectory)
+        repository: $(imageRepo)
+        tags: |
+          $(getTag.tag)
+          latest
+      displayName: Docker Build and Push
