@@ -23,7 +23,7 @@ done
 TAG=${TAG:-"latest"}
 REPO=${REPO:-"kayleevo9x/playground"}
 USER=${USER:-"kayleevo9x"}
-export CR_PATH=$GITHUB_TOKEN
+export CR_PAT=$GITHUB_TOKEN
 echo $CR_PAT | docker login ghcr.io -u $USER --password-stdin
 docker build \
   -t helloworld-asp-api:$TAG --platform "linux/amd64" .
