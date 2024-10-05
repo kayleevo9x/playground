@@ -4,8 +4,8 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'url-shortener/**'
-      - '!url-shortener/**.md'
+      - 'applications/url-shortener/url-shortener/**'
+      - 'applications/url-shortener/pyproject.toml'
 
 env:
   POSTGRES_USER: local

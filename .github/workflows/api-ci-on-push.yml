@@ -4,9 +4,8 @@ on:
   push:
     branches: [ main ]
     paths:
-      - 'applications/url-shortener/**'
-      - '!applications/url-shortener/**.md'
-
+      - 'applications/url-shortener/url-shortener/**'
+      - 'applications/url-shortener/pyproject.toml'
 env:
   POETRY_VERSION: "1.8.3"
   GHCR: ghcr.io/kayleevo9x/playground
