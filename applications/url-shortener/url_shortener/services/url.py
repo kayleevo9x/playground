@@ -35,8 +35,8 @@ def create_short_url(db: Session, input_url: ShortUrlCreate) -> ShortURL:
         error_msg = f"Error generating short url. Error: {e}"
         _LOGGER.debug(error_msg)
         raise HTTPException(status_code=500, detail=error_msg)
-    except ShorteningErrorException as e:
-        error_msg = f"There was an error on trying to short the url: url may be invalid"
+    except ShorteningErrorException:
+        error_msg = "There was an error on trying to short the url: url may be invalid"
         _LOGGER.debug(error_msg)
         raise HTTPException(status_code=500, detail=error_msg)
     return db_short_url
