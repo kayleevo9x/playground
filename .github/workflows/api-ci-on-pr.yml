@@ -38,7 +38,7 @@ jobs:
       uses: reviewdog/action-flake8@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        flake8_args: "--count --show-source --statistics"
+        flake8_args: "--count --show-source --statistics --max-line-length=160"
         fail_on_error: true
 
   # TODO
