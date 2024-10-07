@@ -2,6 +2,7 @@ from logging import getLogger
 import re
 from url_shortener.config import settings
 from pyshorteners import Shortener
+from pyshorteners.exceptions import ShorteningErrorException
 from sqlalchemy.orm import Session
 from url_shortener.database.schemas import ShortUrlCreate
 from url_shortener.database.models import ShortURL
@@ -34,13 +35,16 @@ def create_short_url(db: Session, input_url: ShortUrlCreate) -> ShortURL:
         error_msg = f"Error generating short url. Error: {e}"
         _LOGGER.debug(error_msg)
         raise HTTPException(status_code=500, detail=error_msg)
+    except ShorteningErrorException:
+        error_msg = "There was an error on trying to short the url: url may be invalid"
+        _LOGGER.debug(error_msg)
+        raise HTTPException(status_code=500, detail=error_msg)
     return db_short_url
 
 
 def search_original_url(db: Session, short_url: str) -> ShortURL:
     _LOGGER.debug(f"Search original URL in DB from {short_url}")
     result = db.query(ShortURL).filter(ShortURL.url == short_url).first()
-
     if not result:
         raise HTTPException(
             status_code=404, detail="No original URL found for the given short URL"
