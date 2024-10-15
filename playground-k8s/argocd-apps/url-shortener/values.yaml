@@ -32,6 +32,7 @@ autoscaling:
 envVars:
   POSTGRES_HOST: postgresql.postgresql.svc.cluster.local
   LOG_LEVEL: INFO
+  ENABLE_METRICS: true
 
 serviceAccount: 
   create: True

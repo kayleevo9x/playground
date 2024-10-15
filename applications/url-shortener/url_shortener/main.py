@@ -2,9 +2,8 @@ from fastapi import FastAPI
 import logging
 from url_shortener.config import settings
 from url_shortener.endpoints import all_routers, all_metadata
-from prometheus_fastapi_instrumentator import Instrumentator
 from url_shortener.database.database import create_db
-
+from prometheus_fastapi_instrumentator import Instrumentator
 
 create_db()
 app = FastAPI(openapi_tags=all_metadata)
@@ -21,7 +20,7 @@ instrumentator = (
         should_respect_env_var=True,
         should_instrument_requests_inprogress=True,
         excluded_handlers=["/metrics"],
-        env_var_name=f"{settings.ENABLE_METRICS}",
+        env_var_name="ENABLE_METRICS",
         inprogress_name="inprogress",
         inprogress_labels=True,
     )

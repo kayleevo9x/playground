@@ -16,8 +16,7 @@ from url_shortener.services.url import (
 
 _LOGGER = getLogger(settings.LOGGER_NAME)
 
-templates = Jinja2Templates(
-    directory=f"{os.getcwd()}/url_shortener/templates/")
+templates = Jinja2Templates(directory=f"{os.getcwd()}/url_shortener/templates/")
 router = APIRouter()
 
 

@@ -5,19 +5,22 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    POSTGRES_PORT: int = "5432"
+    POSTGRES_PORT: int = 5432
     POSTGRES_HOST: str = None
     POSTGRES_USER: str = None
     POSTGRES_PASSWORD: str = None
     POSTGRES_DB: str = None
     SQLALCHEMY_DATABASE_URI: Union[Optional[PostgresDsn], Optional[str]] = None
-    ENABLE_METRICS: bool = True
+
     model_config = SettingsConfigDict(
-        env_file=f"{dirname(dirname(abspath(__file__)))}/.env", env_file_encoding="utf-8", extra="allow"
+        env_file=f"{dirname(dirname(abspath(__file__)))}/.env",
+        env_file_encoding="utf-8",
+        extra="allow",
     )
 
     LOG_LEVEL: str = "INFO"
     LOGGER_NAME: str = "url-shortener-log"
+    ENABLE_METRICS: bool = True
 
     @field_validator("SQLALCHEMY_DATABASE_URI", mode="before")
     @classmethod

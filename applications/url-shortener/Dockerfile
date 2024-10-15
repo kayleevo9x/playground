@@ -22,11 +22,13 @@ ARG CODE_DIR
 WORKDIR ${CODE_DIR}
 COPY --from=build ${CODE_DIR} ${CODE_DIR}
 RUN poetry install
-CMD ["uvicorn", "url_shortener.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload","--log-level", "debug"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["api-debug"]
 
 FROM build as main
 ARG CODE_DIR
 WORKDIR ${CODE_DIR}
 COPY --from=build ${CODE_DIR} ${CODE_DIR}
 RUN poetry install
-CMD ["uvicorn", "url_shortener.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["./entrypoint.sh"]
+CMD ["api"]
