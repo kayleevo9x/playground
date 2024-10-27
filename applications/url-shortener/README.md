@@ -22,7 +22,7 @@ This option creates a local development docker container with all the following 
 ### Serve the application:
 Start the API
 
-    uvicorn url_shortener.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+    uvicorn url_shortener.main:app --host 0.0.0.0 --port 8000 --reload --env-file .env
 
 ## Local Developments Traditional Way
 - Ensure poetry is installed pip install poetry
@@ -50,7 +50,7 @@ Run the following command to stand up postgresql locally
     
 Start the API
 
-    uvicorn url_shortener.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+    uvicorn url_shortener.main:app --host 0.0.0.0 --port 8000 --reload --env-file .env
 
 The API url: http://localhost:8000
 The API docs url: http://localhost:8000/docs 
