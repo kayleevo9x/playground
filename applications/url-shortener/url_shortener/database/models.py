@@ -1,6 +1,9 @@
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import DeclarativeBase
 
-from url_shortener.database.database import Base
+
+class Base(DeclarativeBase):
+    pass
 
 
 class ShortURL(Base):

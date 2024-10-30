@@ -1,5 +1,5 @@
 from url_shortener.config import settings
-import os
+from os.path import dirname, join
 from logging import getLogger
 from fastapi import APIRouter, Depends, Request, Form, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -16,16 +16,18 @@ from url_shortener.services.url import (
 
 _LOGGER = getLogger(settings.LOGGER_NAME)
 
-templates = Jinja2Templates(directory=f"{os.getcwd()}/url_shortener/templates/")
+templates = Jinja2Templates(directory=join(
+    dirname(dirname(__file__)), "templates"))
 router = APIRouter()
 
 
 @router.get("/", response_class=HTMLResponse)
 def read_form(request: Request, error_message: str = None, message: str = None):
-    return templates.TemplateResponse(
-        "form.html",
-        {"request": request, "error_message": error_message, "message": message},
-    )
+    return templates.TemplateResponse(request=request,
+                                      name="form.html",
+                                      context={"error_message": error_message,
+                                               "message": message},
+                                      )
 
 
 @router.post(
@@ -43,8 +45,9 @@ def generate(request: Request, url: str = Form(), db: Session = Depends(get_db))
     try:
         short_url = create_short_url(db=db, input_url=input_url)
         return templates.TemplateResponse(
-            "result.html",
-            {"request": request, "short_url": short_url},
+            request=request,
+            name="result.html",
+            context={"short_url": short_url}
         )
     except HTTPException as e:
         return RedirectResponse(url=f"/?error_message={e.detail}", status_code=303)
@@ -64,9 +67,9 @@ def fetch_original_url(request: Request, short_url: str, db: Session = Depends(g
     try:
         original_url = search_original_url(db=db, short_url=short_url)
         return templates.TemplateResponse(
-            "result.html",
-            {
-                "request": request,
+            request=request,
+            name="result.html",
+            context={
                 "short_url": short_url,
                 "original_url": original_url,
             },
@@ -75,7 +78,7 @@ def fetch_original_url(request: Request, short_url: str, db: Session = Depends(g
         return RedirectResponse(url=f"/?error_message={e.detail}", status_code=303)
 
 
-@router.get(
+@ router.get(
     "/fetchall/",
     summary="Get all existing short URLs",
     tags=["shorturl"],
@@ -89,13 +92,15 @@ def fetch_short_urls(request: Request, db: Session = Depends(get_db)):
     try:
         all_urls = get_short_urls(db=db)
         return templates.TemplateResponse(
-            "result.html", {"request": request, "short_urls": all_urls}
+            request=request,
+            name="result.html",
+            context={"short_urls": all_urls}
         )
     except HTTPException as e:
         return RedirectResponse(url=f"/?error_message={e.detail}", status_code=303)
 
 
-@router.delete(
+@ router.delete(
     "/delete/{short_url:path}",
     summary="Deletes short URL",
     tags=["shorturl"],

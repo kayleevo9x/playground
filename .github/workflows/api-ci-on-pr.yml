@@ -29,11 +29,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-
     - name: Run Linter  
       uses: reviewdog/action-flake8@v3
       with:
@@ -41,5 +36,35 @@ jobs:
         flake8_args: "--count --show-source --statistics --max-line-length=160"
         fail_on_error: true
 
-  # TODO
-  # test:
+  test:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: applications/url-shortener
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Test with pytest
+      run: |
+        source .nox/dev-3-9/bin/activate
+        pytest --doctest-modules --junitxml=test-results.xml --cov=nmr_promoawc_sproxy --cov-report=xml:pytest-coverage.xml
+
+    - name: Pytest coverage comment
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-xml-coverage-path: backend/pytest-coverage.xml
+        junitxml-path: backend/test-results.xml
+        junitxml-title: Test Summary
+        remove-link-from-badge: true

@@ -23,3 +23,4 @@ dist/
 .cache
 **/__pycache__/
 .vscode
+*.db

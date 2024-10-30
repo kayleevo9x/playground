@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  tests:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: test
+    environment:
+      - POSTGRES_HOST=postgresql
+    container_name: api-test

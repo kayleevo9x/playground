@@ -9,6 +9,5 @@ __pycache__/
 *.py[cdo]
 .egg-info
 .pytest_cache/
-.env
 Dockerfile
 docker-compose.yml
