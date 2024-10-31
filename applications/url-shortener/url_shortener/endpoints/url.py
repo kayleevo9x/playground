@@ -78,7 +78,7 @@ def fetch_original_url(request: Request, short_url: str, db: Session = Depends(g
         return RedirectResponse(url=f"/?error_message={e.detail}", status_code=303)
 
 
-@ router.get(
+@router.get(
     "/fetchall/",
     summary="Get all existing short URLs",
     tags=["shorturl"],
@@ -100,7 +100,7 @@ def fetch_short_urls(request: Request, db: Session = Depends(get_db)):
         return RedirectResponse(url=f"/?error_message={e.detail}", status_code=303)
 
 
-@ router.delete(
+@router.delete(
     "/delete/{short_url:path}",
     summary="Deletes short URL",
     tags=["shorturl"],

@@ -50,7 +50,7 @@ def test_search_original_url(client, short_url):
 
 def test_search_nonexisting_original_url(client):
     response = client.get(
-        f"/search/http://tinyurl.com/test")
+        "/search/http://tinyurl.com/test")
     assert response.status_code == 200
     data = response.context
     assert data is not None, "Context is missing in the response."

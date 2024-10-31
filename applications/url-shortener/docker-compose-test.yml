@@ -6,6 +6,9 @@ services:
       target: test
     environment:
       - POSTGRES_HOST=host.docker.internal
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
     container_name: api-test
     volumes:
       - ./output/:/app/output
