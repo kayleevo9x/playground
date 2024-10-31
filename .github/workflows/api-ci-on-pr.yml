@@ -12,6 +12,7 @@ env:
   POSTGRES_PASSWORD: local
   POSTGRES_DB: app
   POSTGRES_PORT: 5432
+  POSTGRES_HOST: postgres
   PYTHON_VERSION: "3.12"
   POETRY_VERSION: "1.8.3"
 
@@ -47,6 +48,8 @@ jobs:
         image: postgres:latest
         ports:
           - 5432:5432
+        options: > 
+          --network-alias=postgres
 
     steps:
     - uses: actions/checkout@v4
