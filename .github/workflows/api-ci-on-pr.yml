@@ -58,13 +58,12 @@ jobs:
 
     - name: Test with pytest
       run: |
-        source .nox/dev-3-9/bin/activate
-        pytest --doctest-modules --junitxml=test-results.xml --cov=nmr_promoawc_sproxy --cov-report=xml:pytest-coverage.xml
+        docker compose -f docker-compose-test.yml up
 
     - name: Pytest coverage comment
       uses: MishaKav/pytest-coverage-comment@main
       with:
-        pytest-xml-coverage-path: backend/pytest-coverage.xml
-        junitxml-path: backend/test-results.xml
+        pytest-xml-coverage-path: output/pytest-coverage.xml
+        junitxml-path: output/test-results.xml
         junitxml-title: Test Summary
         remove-link-from-badge: true

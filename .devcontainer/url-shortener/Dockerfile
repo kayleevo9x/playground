@@ -6,5 +6,4 @@ ENV POETRY_VIRTUALENVS_CREATE=false \
     POETRY_NO_INTERACTION=1 \
     POETRY_VERSION=1.8.3
 
-RUN pip install poetry
 RUN pip install uvicorn 

@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   tests:
     build:
@@ -7,5 +5,7 @@ services:
       dockerfile: ./Dockerfile
       target: test
     environment:
-      - POSTGRES_HOST=postgresql
+      - POSTGRES_HOST=host.docker.internal
     container_name: api-test
+    volumes:
+      - ./output/:/app/output

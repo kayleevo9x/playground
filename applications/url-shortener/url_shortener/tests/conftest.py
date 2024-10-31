@@ -1,6 +1,5 @@
 import pytest
 from fastapi.testclient import TestClient
-from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from url_shortener.main import app
 from url_shortener.database.database import get_db, engine
