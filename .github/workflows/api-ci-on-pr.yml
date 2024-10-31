@@ -6,13 +6,12 @@ on:
     paths:
       - 'applications/url-shortener/url-shortener/**'
       - 'applications/url-shortener/pyproject.toml'
-
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+  
 env:
-  POSTGRES_USER: local
-  POSTGRES_PASSWORD: local
-  POSTGRES_DB: app
-  POSTGRES_PORT: 5432
-  POSTGRES_HOST: localhost
   PYTHON_VERSION: "3.12"
   POETRY_VERSION: "1.8.3"
 
@@ -42,21 +41,6 @@ jobs:
     defaults:
       run:
         working-directory: applications/url-shortener
-
-    services:
-      postgres:
-        image: postgres:latest
-        ports:
-          - 5432:5432
-        env:
-          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
-          POSTGRES_USER: ${{ env.POSTGRES_USER }}
-          POSTGRES_DB: ${{ env.POSTGRES_DB }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ env.PYTHON_VERSION }}
@@ -66,12 +50,12 @@ jobs:
 
     - name: Test with pytest
       run: |
-        docker compose -f docker-compose-test.yml up
+        docker compose -f docker-compose-test.yml up --build --abort-on-container-exit
 
     - name: Pytest coverage comment
       uses: MishaKav/pytest-coverage-comment@main
       with:
-        pytest-xml-coverage-path: output/pytest-coverage.xml
-        junitxml-path: output/test-results.xml
+        pytest-xml-coverage-path: applications/url-shortener/output/pytest-coverage.xml
+        junitxml-path: applications/url-shortener/output/test-results.xml
         junitxml-title: Test Summary
         remove-link-from-badge: true

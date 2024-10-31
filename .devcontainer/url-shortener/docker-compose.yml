@@ -1,8 +1,8 @@
 x-environment:
-    &default-environment
-    POSTGRES_USER: local
-    POSTGRES_PASSWORD: local
-    POSTGRES_DB: app
+  &default-environment
+  POSTGRES_USER: local
+  POSTGRES_PASSWORD: local
+  POSTGRES_DB: app
 
 services:
   app:
