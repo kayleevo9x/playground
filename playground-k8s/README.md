@@ -108,6 +108,9 @@ password: Run this command - kubectl -n argocd get secret argocd-initial-admin-s
 
 ![](../docs/images/lint-failure.png)
 
+Test Coverage Result
+![](../docs/images/test-result.png)
+
 - [api-ci-on-push.yml](../.github/workflows/api-ci-on-push.yml) is triggered on PR merged to build and push the Docker image to Github container registry of the repo. The action will then update the [url-shortener Chart yaml](./argocd-apps/url-shortener/Chart.yaml) version number. ArgoCD will automatically detects the update and sync the change
 
 ![](../docs/images/argo-cd.png)
