@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html>
+<a href="/">Home</a>
+
 <head>
     <title>Short URL Results</title>
 </head>
@@ -8,8 +10,13 @@
 
     {% if short_url %}
         <h2>Short URL</h2>
-        <p>Original URL: <a href="{{ short_url.original_url }}">{{ original_url.original_url }}</a></p>
-        <p>Short URL: <a href="{{ short_url.url }}">{{ original_url.url }}</a></p>
+        {% if not original_url %}
+            <p>Original URL: <a href="{{ short_url.original_url }}">{{ short_url.original_url }}</a></p>
+            <p>Short URL: <a href="{{ short_url.url }}">{{ short_url.url }}</a></p>
+        {% else %}
+            <p>Original URL: <a href="{{ short_url.original_url }}">{{ original_url.original_url }}</a></p>
+            <p>Short URL: <a href="{{ short_url.url }}">{{ original_url.url }}</a></p>
+        {% endif %}
     {% elif short_urls %}
         <h2>All Existing Short URLs</h2>
         <ul>

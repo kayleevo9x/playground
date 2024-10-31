@@ -22,3 +22,5 @@ dist/
 *.pem
 .cache
 **/__pycache__/
+.vscode
+*.db

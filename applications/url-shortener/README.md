@@ -19,6 +19,11 @@ This option creates a local development docker container with all the following 
 - If there's a requirement change, update `pyproject.toml` > Open Vscode Remote Windows > Rebuild Container
 ***Notes:*** Rebuild Dev Container will also tear down the postgresql volume which wipes out any existing data in the database
 
+### Serve the application:
+Start the API
+
+    uvicorn url_shortener.main:app --host 0.0.0.0 --port 8000 --reload --env-file .env
+
 ## Local Developments Traditional Way
 - Ensure poetry is installed pip install poetry
 - Rename `.env.dev` to `.env` to load required environment variables
@@ -45,7 +50,7 @@ Run the following command to stand up postgresql locally
     
 Start the API
 
-    uvicorn url_shortener.main:app --host 0.0.0.0 --port 8000 --reload --log-level debug
+    uvicorn url_shortener.main:app --host 0.0.0.0 --port 8000 --reload --env-file .env
 
 The API url: http://localhost:8000
 The API docs url: http://localhost:8000/docs 

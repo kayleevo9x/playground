@@ -6,13 +6,12 @@ on:
     paths:
       - 'applications/url-shortener/url-shortener/**'
       - 'applications/url-shortener/pyproject.toml'
-
+permissions:
+  contents: write
+  checks: write
+  pull-requests: write
+  
 env:
-  POSTGRES_USER: local
-  POSTGRES_PASSWORD: local
-  POSTGRES_DB: app
-  POSTGRES_PORT: 5432
-  POSTGRES_HOST: localhost
   PYTHON_VERSION: "3.12"
   POETRY_VERSION: "1.8.3"
 
@@ -29,11 +28,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python ${{ env.PYTHON_VERSION }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ env.PYTHON_VERSION }}
-
     - name: Run Linter  
       uses: reviewdog/action-flake8@v3
       with:
@@ -41,5 +35,27 @@ jobs:
         flake8_args: "--count --show-source --statistics --max-line-length=160"
         fail_on_error: true
 
-  # TODO
-  # test:
+  test:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: applications/url-shortener
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Test with pytest
+      run: |
+        docker compose -f docker-compose-test.yml up --build --abort-on-container-exit
+
+    - name: Pytest coverage comment
+      uses: MishaKav/pytest-coverage-comment@main
+      with:
+        pytest-xml-coverage-path: applications/url-shortener/output/pytest-coverage.xml
+        junitxml-path: applications/url-shortener/output/test-results.xml
+        junitxml-title: Test Summary
+        remove-link-from-badge: true

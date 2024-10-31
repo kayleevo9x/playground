@@ -1,10 +1,8 @@
-version: '3.8'
-
 x-environment:
-    &default-environment
-    POSTGRES_USER: local
-    POSTGRES_PASSWORD: local
-    POSTGRES_DB: app
+  &default-environment
+  POSTGRES_USER: local
+  POSTGRES_PASSWORD: local
+  POSTGRES_DB: app
 
 services:
   app:
@@ -17,14 +15,13 @@ services:
       - /var/run/docker.sock:/var/run/docker-host.sock 
       # Update this to wherever you want VS Code to mount the folder of your project
       - ../..:/workspaces:cached
-
+      
     command: sleep infinity 
-
     # Runs app on the same network as the database container, allows "forwardPorts" in devcontainer.json function.
     network_mode: service:db
 
   db:
-    image: postgres:latest
+    image: postgres:16-alpine
     restart: unless-stopped
     volumes:
       - postgres-data:/var/lib/postgresql/data
@@ -32,6 +29,5 @@ services:
 
     ports:
       - "5432:5432"
-
 volumes:
   postgres-data:
