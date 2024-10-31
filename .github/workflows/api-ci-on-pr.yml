@@ -12,7 +12,7 @@ env:
   POSTGRES_PASSWORD: local
   POSTGRES_DB: app
   POSTGRES_PORT: 5432
-  POSTGRES_HOST: postgres
+  POSTGRES_HOST: localhost
   PYTHON_VERSION: "3.12"
   POETRY_VERSION: "1.8.3"
 
@@ -48,9 +48,15 @@ jobs:
         image: postgres:latest
         ports:
           - 5432:5432
-        options: > 
-          --network-alias=postgres
-
+        env:
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ env.PYTHON_VERSION }}

@@ -12,3 +12,10 @@ services:
     container_name: api-test
     volumes:
       - ./output/:/app/output
+
+    networks:
+      - github_network
+
+networks:
+  github_network:
+    external: true
