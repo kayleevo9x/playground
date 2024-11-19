@@ -1,3 +1,10 @@
+x-environment:
+    &default-environment
+    POSTGRES_USER: local
+    POSTGRES_PASSWORD: local
+    POSTGRES_DB: app
+    POSTGRES_HOST: postgresql
+
 services:
   postgresql:
     image: postgres:16-alpine
@@ -8,31 +15,34 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-    env_file: .env
+    env_file: 
+      - path: ${LOCAL_WORKSPACE_FOLDER:-.}/.env
+        required: false
+    environment: *default-environment
     volumes:
       - db-data:/var/lib/postgresql/data
     shm_size: 256M
 
-  ## Uncomment to start the api using docker-compose 
-  # api:
-  #   build:
-  #     context: .
-  #     dockerfile: ./Dockerfile
-  #     target: dev
-  #     args:
-  #       ENVIRONMENT: development
-  #   env_file:
-  #     - .env
-  #   environment:
-  #     - POSTGRES_HOST=postgresql
-  #   depends_on:
-  #     postgresql:
-  #       condition: service_healthy
-  #   ports:
-  #     - "8000:8000"
-  #   volumes:
-  #     - .:/var/task:cached
-  #     - .cache:/tmp/pip/cache:cached
+  # Uncomment to start the api using docker-compose 
+  api:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+      target: dev
+      args:
+        ENVIRONMENT: development
+    env_file:
+      - path: ${LOCAL_WORKSPACE_FOLDER:-.}/.env
+        required: false
+    environment: *default-environment
+    depends_on:
+      postgresql:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/var/task:cached
+      - .cache:/tmp/pip/cache:cached
 
 volumes:
   db-data:

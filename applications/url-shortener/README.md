@@ -15,7 +15,14 @@ This option creates a local development docker container with all the following 
 ```
 
 ## Local Developments Using devcontainer
-- Rename `.env.dev` to `.env` to load required environment variables start the `devcontainer` and that's it! You should now be ready for coding in a local development docker container with all the tools and requirements in place. Magic!
+- Start the `devcontainer` and that's it! You should now be ready for coding in a local development docker container with all the tools and requirements in place. Magic!
+- `flake8` is used for linting and `black` is used for formater 
+- Test suite is also ready for use
+
+![](../../docs/images/tests.png)
+- SQL tool extension is also pre-installed and configured for database access
+
+![](../../docs/images/sql-tool.png)
 - If there's a requirement change, update `pyproject.toml` > Open Vscode Remote Windows > Rebuild Container
 ***Notes:*** Rebuild Dev Container will also tear down the postgresql volume which wipes out any existing data in the database
 

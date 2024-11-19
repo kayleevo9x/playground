@@ -2,13 +2,8 @@
 set -ex
 
 WORKSPACE_DIR=$(pwd)
-poetry config cache-dir ${WORKSPACE_DIR}/.cache
 
-echo "install dependencies"
 cd ${WORKSPACE_DIR}/applications/url-shortener
-echo "Install python url-shortener dependencies and build"
-poetry install 
-poetry build
 
 docker compose up postgresql -d
 

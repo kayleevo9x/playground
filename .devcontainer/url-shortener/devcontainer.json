@@ -11,8 +11,10 @@
         //     "version": "1.8.1"
         // },
         // "ghcr.io/devcontainers/features/kubectl-helm-minikube:1":{}
-        "ghcr.io/devcontainers-contrib/features/poetry:2": {},
-        "ghcr.io/devcontainers/features/docker-in-docker:1": {}
+        "ghcr.io/devcontainers-contrib/features/poetry:1": {},
+        "ghcr.io/devcontainers/features/docker-outside-of-docker": {}
+        // "ghcr.io/devcontainers/features/docker-in-docker:2.12.0": {}
+        
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -20,31 +22,41 @@
 	"forwardPorts": [5432],
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "bash ./.devcontainer/url-shortener/post-install.sh",
-
+    "postStartCommand": "bash ./.devcontainer/url-shortener/post-start.sh",
 	"customizations": {
         "vscode": {
             "settings": {
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "editor.insertSpaces": true,
+                    "editor.tabSize": 4,
+                    "editor.formatOnSave": true
+                },
                 "terminal.integrated.defaultProfile.linux": "bash",
-                "python.defaultInterpreterPath": "/usr/local/bin/python",
                 "python.languageServer": "Default",
-                "python.linting.enabled": true,
-                "python.linting.pylintEnabled": false,
-                "python.formatting.autopep8Path": "/usr/local/py-utils/bin/autopep8",
-                "python.formatting.blackPath": "/usr/local/py-utils/bin/black",
-                "python.formatting.yapfPath": "/usr/local/py-utils/bin/yapf",
-                "python.linting.banditPath": "/usr/local/py-utils/bin/bandit",
-                "python.linting.flake8Path": "/usr/local/py-utils/bin/flake8",
-                "python.linting.mypyPath": "/usr/local/py-utils/bin/mypy",
-                "python.linting.pycodestylePath": "/usr/local/py-utils/bin/pycodestyle",
-                "python.linting.pydocstylePath": "/usr/local/py-utils/bin/pydocstyle",
-                "python.linting.pylintPath": "/usr/local/py-utils/bin/pylint",
-                "python.formatting.provider": "black",
-                "python.testing.pytestEnabled": true
+                "black-formatter.path": ["black"],
+                "flake8.cwd": "${fileDirname}",
+                "python.testing.pytestEnabled": true,
+                "python.testing.cwd": "/workspaces/applications/url-shortener",
+                "sqltools.connections": [{
+                    "name": "Container database",
+                    "driver": "PostgreSQL",
+                    "previewLimit": 50,
+                    "server": "localhost",
+                    "port": 5432,
+                    "database": "app",
+                    "username": "local",
+                    "password": "local"
+                }]
             },
             // Add the IDs of extensions you want installed when the container is created.
             "extensions": [
-                "ms-python.python",
-                "ms-python.vscode-pylance"
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"mtxr.sqltools",
+				"mtxr.sqltools-driver-pg",
+				"ms-python.black-formatter",
+				"ms-python.flake8"
             ]
         }
     },
@@ -55,5 +67,9 @@
 		"source=${localEnv:HOME}/.gitconfig,target=/home/vscode/.gitconfig,type=bind,consistency=cached"
 	  ],
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
-	"remoteUser": "root"
+	"remoteUser": "root",
+    // This var is used to map the local folder to dockers spun up by devcontainer docker 
+    "remoteEnv": {
+        "LOCAL_WORKSPACE_FOLDER": "${localWorkspaceFolder}/applications/url-shortener"
+    }
 }
