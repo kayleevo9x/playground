@@ -24,3 +24,7 @@ dist/
 **/__pycache__/
 .vscode
 *.db
+obj/
+bin/
+Debug/
+Release/
