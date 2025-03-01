@@ -1,11 +1,13 @@
 name: Python API CI
 
 on:
+
   pull_request:
     branches: [ main ]
     paths:
       - 'applications/url-shortener/url-shortener/**'
       - 'applications/url-shortener/pyproject.toml'
+      - 'applications/url-shortener/Dockerfile'
 permissions:
   contents: write
   checks: write
@@ -13,7 +15,7 @@ permissions:
   
 env:
   PYTHON_VERSION: "3.12"
-  POETRY_VERSION: "1.8.3"
+  POETRY_VERSION: "2.1.1"
 
 jobs:
   lint:
@@ -51,6 +53,11 @@ jobs:
     - name: Test with pytest
       run: |
         docker compose -f docker-compose-test.yml up --build --abort-on-container-exit
+
+    - uses: pypa/gh-action-pip-audit@v1.1.0
+      name: Pip Audit
+      with:
+        inputs: applications/url-shortener/
 
     - name: Pytest coverage comment
       uses: MishaKav/pytest-coverage-comment@main

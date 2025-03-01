@@ -1,3 +1,7 @@
+[project]
+name = "url-shortener"
+dynamic = [ "version" ]
+
 [tool.poetry]
 name = "url-shortener"
 version = "1.2.0"
