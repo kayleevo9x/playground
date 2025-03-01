@@ -57,7 +57,7 @@ jobs:
     - uses: pypa/gh-action-pip-audit@v1.1.0
       name: Pip Audit
       with:
-        inputs: .
+        inputs: applications/url-shortener/
 
     - name: Pytest coverage comment
       uses: MishaKav/pytest-coverage-comment@main
