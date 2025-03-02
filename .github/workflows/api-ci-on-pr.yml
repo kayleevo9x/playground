@@ -59,6 +59,7 @@ jobs:
       run: |
         pip install bandit jinja2
         bandit -r . -f json -o bandit_report.json || true
+      working-directory: .github/scripts
 
     - name: Process Bandit report
       run: python bandit_report.py bandit_report.json
