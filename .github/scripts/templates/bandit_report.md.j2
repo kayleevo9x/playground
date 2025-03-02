@@ -5,30 +5,31 @@
 **Total Lines Skipped(#nosec):** {{ skipped_lines }}  
 
 ## Severity & Confidence Breakdown
-{% set severity_colors = {"HIGH": "red", "MEDIUM": "blue", "LOW": "yellow", "UNDEFINED": "white"} %}
+{% set severity_confidence_emojis = {"HIGH": "🔴", "MEDIUM": "🟦", "LOW": "🟨", "UNDEFINED": "⚪"} %}
 
-| **Type**       | <span style="color: {{ severity_colors['HIGH'] }}">High</span> | <span style="color: {{ severity_colors['MEDIUM'] }}">Medium</span> | <span style="color: {{ severity_colors['LOW'] }}">Low</span> | <span style="color: {{ severity_colors['UNDEFINED'] }}">Undefined</span> |
-|----------------|---------------------------------------------------------------|------------------------------------------------|---------------------------------------------|---------------------------------|
-| **Severity**   | <span style="color: {{ severity_colors['HIGH'] }}">{{ severity_count.HIGH }}</span> | <span style="color: {{ severity_colors['MEDIUM'] }}">{{ severity_count.MEDIUM }}</span> | <span style="color: {{ severity_colors['LOW'] }}">{{ severity_count.LOW }}</span> | <span style="color: {{ severity_colors['UNDEFINED'] }}">{{ severity_count.UNDEFINED }}</span> | 
-| **Confidence** | <span style="color: {{ severity_colors['HIGH'] }}">{{ confidence_count.HIGH }}</span> | <span style="color: {{ severity_colors['MEDIUM'] }}">{{ confidence_count.MEDIUM }}</span> | <span style="color: {{ severity_colors['LOW'] }}">{{ confidence_count.LOW }}</span> | <span style="color: {{ severity_colors['UNDEFINED'] }}">{{ confidence_count.UNDEFINED }}</span> |
+| **Type**       | {{ severity_confidence_emojis['HIGH'] }} High | {{ severity_confidence_emojis['MEDIUM'] }} Medium | {{ severity_confidence_emojis['LOW'] }} Low | {{ severity_confidence_emojis['UNDEFINED'] }} Undefined |
+|----------------|------------------------------------|---------------------------------------|---------------------------------|---------------------------------------------|
+| **Severity**   | {{ severity_count.HIGH }}          | {{ severity_count.MEDIUM }}           | {{ severity_count.LOW }}       | {{ severity_count.UNDEFINED }}              | 
+| **Confidence** | {{ confidence_count.HIGH }}       | {{ confidence_count.MEDIUM }}        | {{ confidence_count.LOW }}    | {{ confidence_count.UNDEFINED }}             |
 
 <details>
 <summary>📋 Click here to see more details</summary>
 {% for severity, issues in grouped_results.items() %}
 {% if issues %}
 <details>
-<summary style="color: {{ severity_colors[severity] }}">{{ severity }} Severity Issues</summary>
+<summary>{{ severity_confidence_emojis[severity] }} {{ severity }} Severity Issues</summary>
 
 {% for issue in issues %}
 <details>
 <summary>{{ issue.test_id }} ({{ issue.filename }})</summary>
 
-| **Severity**  | <span style="color: {{ severity_colors[issue.issue_severity] }}">{{ issue.issue_severity }}</span> |
+| **Severity**  | {{ severity_confidence_emojis[issue.issue_severity] }} {{ issue.issue_severity }} |
 | -------------- | ------------------------------------------------------------ |
-| **Confidence** |  <span style="color: {{ severity_colors[issue.issue_confidence] }}">{{ issue.issue_confidence }}</span> |
+| **Confidence** | {{ severity_confidence_emojis[issue.issue_confidence] }} {{ issue.issue_confidence }} |
 | **Filename**   | `{{ issue.filename }}:{{ issue.line_number }}` |
 | **Issue**      | {{ issue.issue_text }} |
 | **More Info**  | {{ issue.more_info }} |
+
 ```python
 {{ issue.code.strip() }}
 ```
@@ -38,5 +39,6 @@
 {% endif %}
 {% endfor %}
 </details>
+
 
 
