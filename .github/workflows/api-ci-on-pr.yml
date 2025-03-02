@@ -5,7 +5,7 @@ on:
   pull_request:
     branches: [ main ]
     paths:
-      - 'applications/url-shortener/url-shortener/**'
+      - 'applications/url-shortener/url_shortener/**'
       - 'applications/url-shortener/pyproject.toml'
       - 'applications/url-shortener/Dockerfile'
 permissions:
@@ -36,6 +36,38 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         flake8_args: "--count --show-source --statistics --max-line-length=160"
         fail_on_error: true
+  
+  sast:
+    needs: [lint]
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: applications/url-shortener
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ env.PYTHON_VERSION }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - uses: pypa/gh-action-pip-audit@v1.1.0
+      name: Pip Audit
+      with:
+        inputs: applications/url-shortener/
+
+    - name: Run Bandit
+      run: |
+        pip install bandit
+        bandit -r . -f json -o bandit_report.json || true
+
+    - name: Process Bandit report
+      run: python bandit_report.py bandit_report.json
+      working-directory: .github/scripts
+
+    - name: Upload Bandit report
+      uses: marocchino/sticky-pull-request-comment@v2
+      with:
+        path: .github/scripts/templates/bandit_report.md
 
   test:
     needs: [lint]
@@ -53,11 +85,6 @@ jobs:
     - name: Test with pytest
       run: |
         docker compose -f docker-compose-test.yml up --build --abort-on-container-exit
-
-    - uses: pypa/gh-action-pip-audit@v1.1.0
-      name: Pip Audit
-      with:
-        inputs: applications/url-shortener/
 
     - name: Pytest coverage comment
       uses: MishaKav/pytest-coverage-comment@main
