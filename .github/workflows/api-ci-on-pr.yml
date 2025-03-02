@@ -35,7 +35,7 @@ jobs:
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         flake8_args: "--count --show-source --statistics --max-line-length=160"
-        fail_on_error: true
+        fail_level: error
   
   sast:
     needs: [lint]
@@ -57,7 +57,7 @@ jobs:
 
     - name: Run Bandit
       run: |
-        pip install bandit
+        pip install bandit jinja2
         bandit -r . -f json -o bandit_report.json || true
 
     - name: Process Bandit report
