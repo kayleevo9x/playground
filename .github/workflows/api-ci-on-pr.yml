@@ -40,9 +40,7 @@ jobs:
   sast:
     needs: [lint]
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: applications/url-shortener
+
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ env.PYTHON_VERSION }}
@@ -58,7 +56,7 @@ jobs:
     - name: Run Bandit
       run: |
         pip install bandit jinja2
-        bandit -r . -f json -o .github/scripts/bandit_report.json || true
+        bandit -r applications/url-shortener/ -f json -o .github/scripts/bandit_report.json || true
 
     - name: Process Bandit report
       run: python bandit_report.py bandit_report.json
