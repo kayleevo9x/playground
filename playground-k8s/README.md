@@ -104,11 +104,11 @@ password: Run this command - kubectl -n argocd get secret argocd-initial-admin-s
 4. CI/CD solution
 `Github Actions` is used for CI solution 
 
-- [api-ci-on-pr.yml](../.github/workflows/api-ci-on-pr.yml) is triggered on PR creation to run `lint` and `test` the code. If there's failure, the details should be available from the PR
+- [api-ci-on-pr.yml](../.github/workflows/api-ci-on-pr.yml) is triggered on PR creation to run `lint`, code static analysis `sast` and `test` the code. If there's failure, the details should be available from the PR
 
 ![](../docs/images/lint-failure.png)
 
-Test Coverage Result
+Security Static Analysis and Test Coverage Result
 ![](../docs/images/test-result.png)
 
 - [api-ci-on-push.yml](../.github/workflows/api-ci-on-push.yml) is triggered on PR merged to build and push the Docker image to Github container registry of the repo. The action will then update the [url-shortener Chart yaml](./argocd-apps/url-shortener/Chart.yaml) version number. ArgoCD will automatically detects the update and sync the change
