@@ -1,0 +1,44 @@
+# 🚨 Bandit Security Report 🚨
+
+## Summary
+**Total Lines of Code:** {{ total_lines }}  
+**Total Lines Skipped(#nosec):** {{ skipped_lines }}  
+
+## Severity & Confidence Breakdown
+{% set severity_confidence_emojis = {"HIGH": "🔴", "MEDIUM": "🟦", "LOW": "🟨", "UNDEFINED": "⚪"} %}
+
+| **Type**       | {{ severity_confidence_emojis['HIGH'] }} High | {{ severity_confidence_emojis['MEDIUM'] }} Medium | {{ severity_confidence_emojis['LOW'] }} Low | {{ severity_confidence_emojis['UNDEFINED'] }} Undefined |
+|----------------|------------------------------------|---------------------------------------|---------------------------------|---------------------------------------------|
+| **Severity**   | {{ severity_count.HIGH }}          | {{ severity_count.MEDIUM }}           | {{ severity_count.LOW }}       | {{ severity_count.UNDEFINED }}              | 
+| **Confidence** | {{ confidence_count.HIGH }}       | {{ confidence_count.MEDIUM }}        | {{ confidence_count.LOW }}    | {{ confidence_count.UNDEFINED }}             |
+
+<details>
+<summary>📋 Click here to see more details</summary>
+{% for severity, issues in grouped_results.items() %}
+{% if issues %}
+<details>
+<summary>{{ severity_confidence_emojis[severity] }} {{ severity }} Severity Issues</summary>
+
+{% for issue in issues %}
+<details>
+<summary>{{ issue.test_id }} ({{ issue.filename }})</summary>
+
+| **Severity**  | {{ severity_confidence_emojis[issue.issue_severity] }} {{ issue.issue_severity }} |
+| -------------- | ------------------------------------------------------------ |
+| **Confidence** | {{ severity_confidence_emojis[issue.issue_confidence] }} {{ issue.issue_confidence }} |
+| **Filename**   | `{{ issue.filename }}:{{ issue.line_number }}` |
+| **Issue**      | {{ issue.issue_text }} |
+| **More Info**  | {{ issue.more_info }} |
+
+```python
+{{ issue.code.strip() }}
+```
+</details>
+{% endfor %}
+</details>
+{% endif %}
+{% endfor %}
+</details>
+
+
+
