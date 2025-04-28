@@ -14,9 +14,9 @@ then
     exit
 fi
 
-# KinD 1.30 (release 0.23.0)
-# https://github.com/kubernetes-sigs/kind/releases/tag/v0.23.0
-KIND_VERSION=v0.23.0
+# KinD 1.32 (release 0.27.0)
+# https://github.com/kubernetes-sigs/kind/releases/tag/v0.27.0
+KIND_VERSION=v0.27.0
 
 WINDOWS=https://github.com/kubernetes-sigs/kind/releases/download/$KIND_VERSION/kind-windows-amd64
 LINUX=https://github.com/kubernetes-sigs/kind/releases/download/$KIND_VERSION/kind-linux-amd64
