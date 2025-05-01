@@ -515,7 +515,7 @@ resource "kubernetes_job" "ingress_nginx_admission_create" {
       spec {
         container {
           name  = "create"
-          image = "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.4.0@sha256:44d1d0e9f19c63f58b380c5fddaca7cf22c7cee564adeff365225a5df5ef3334"
+          image = "registry.k8s.io/ingress-nginx/kube-webhook-certgen:v1.5.3@sha256:2cf4ebfa82a37c357455458f6dfc334aea1392d508270b2517795a9933a02524"
           args  = ["create", "--host=ingress-nginx-controller-admission,ingress-nginx-controller-admission.$(POD_NAMESPACE).svc", "--namespace=$(POD_NAMESPACE)", "--secret-name=ingress-nginx-admission"]
 
           env {
@@ -749,7 +749,7 @@ resource "kubernetes_deployment" "ingress_nginx_controller" {
 
         container {
           name  = "controller"
-          image = "registry.k8s.io/ingress-nginx/controller:v${var.nginx_version}@sha256:42b3f0e5d0846876b1791cd3afeb5f1cbbe4259d6f35651dcc1b5c980925379c"
+          image = "registry.k8s.io/ingress-nginx/controller:v${var.nginx_version}@sha256:03497ee984628e95eca9b2279e3f3a3c1685dd48635479e627d219f00c8eefa9"
           args  = ["/nginx-ingress-controller", "--election-id=ingress-nginx-leader", "--controller-class=k8s.io/ingress-nginx", "--ingress-class=nginx", "--configmap=$(POD_NAMESPACE)/ingress-nginx-controller", "--validating-webhook=:8443", "--validating-webhook-certificate=/usr/local/certificates/cert", "--validating-webhook-key=/usr/local/certificates/key", "--watch-ingress-without-class=true", "--enable-metrics=false", "--publish-status-address=localhost"]
 
           port {

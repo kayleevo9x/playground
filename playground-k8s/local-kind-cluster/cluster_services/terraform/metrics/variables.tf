@@ -1,4 +1,4 @@
 variable "prometheus_helmchart" {
   type    = string
-  default = "61.7.1"
+  default = "71.1.0"
 }
