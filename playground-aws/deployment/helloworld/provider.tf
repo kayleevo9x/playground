@@ -3,14 +3,15 @@ data "aws_caller_identity" "current" {
 
 locals {
   default_tags = {
-    Terraform          = "True"
-    ClusterName        = var.cluster_name
-    Namespace          = "Infrastructure"
-    Environment        = "Development"
+    Terraform   = "True"
+    ClusterName = var.cluster_name
+    Namespace   = "Infrastructure"
+    Environment = "Development"
   }
 }
 
 provider "aws" {
+  profile = "personal"
 }
 
 # If using remote state, 
@@ -26,8 +27,7 @@ provider "aws" {
 # }
 
 
-
 provider "kubernetes" {
-  config_path = var.kubeconfig_path
+  config_path    = var.kubeconfig_path
   config_context = var.cluster_name
 }

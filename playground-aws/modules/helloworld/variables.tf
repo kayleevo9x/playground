@@ -44,6 +44,13 @@ variable "container_port" {
   default     = 8080
 }
 
+variable "service_type" {
+  description = "The type of K8s service to create."
+  type        = string
+  default     = "ClusterIP"
+  
+}
+
 ##################
 # Miscellanious
 ##################
@@ -73,10 +80,6 @@ variable "ingress_hostname" {
   type        = string
   description = "Ingress hostname"
   default     = ""
-    validation {
-    condition     = var.enable_ingress ? length(var.ingress_hostname) > 0 : true
-    error_message = "ingress_hostname must be set if enable_ingress is true."
-  }
 }
 
 variable "ingress_annotations" {

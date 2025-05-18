@@ -1,5 +1,5 @@
 module "helloworld" {
-  source = "../modules/helloworld"
+  source = "../../modules/helloworld"
 
   enable_ingress      = var.enable_ingress
   ingress_class_name  = var.ingress_class_name

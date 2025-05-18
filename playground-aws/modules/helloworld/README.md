@@ -1,30 +1,31 @@
-# Helloworld Kubernetes Module for AWS EKS
+# HelloWorld Kubernetes Deployment Module
 
-This module deploys a simple "Hello Kubernetes" web app into an AWS EKS cluster. It includes:
+This module provides a simple deployment for the "Hello Kubernetes" application on an existing Amazon Elastic Kubernetes Service (EKS) cluster. It is designed to demonstrate basic Kubernetes resource creation and integration with AWS services.
 
-- A dedicated Kubernetes `Namespace`
-- A `Deployment` for the containerized app (`paulbouwer/hello-kubernetes`)
-- A `Service` (ClusterIP)
-- An optional `Ingress`, supporting annotations and class configuration (e.g., ALB)
+## Features
 
+- Deploys the [paulbouwer/hello-kubernetes](https://hub.docker.com/r/paulbouwer/hello-kubernetes) containerized application.
+- Creates Kubernetes resources:
+  - **Namespace**
+  - **Deployment**
+  - **Service** (ClusterIP or NodePort)
+  - **Ingress** (optional, with support for ALB or NGINX ingress controllers).
+- Supports custom domain names and annotations for ingress.
 
-## Example Usage
+## Usage
 
 ```
 module "helloworld" {
-  source         = "../modules/helloworld"
-  enable_ingress = true
-  ingress_hostname   = "kj-app.${local.subdomain}.${local.domain_name}"
+  source              = "./modules/helloworld"
+  enable_ingress      = true
+  ingress_hostname    = "demo-app.devops.cloud"
   ingress_annotations = {
-    "alb.ingress.kubernetes.io/certificate-arn" = data.aws_acm_certificate.this.arn
-    "alb.ingress.kubernetes.io/security-groups" = data.terraform_remote_state.global_security_groups.outputs.generic_private_alb
-    "alb.ingress.kubernetes.io/subnets"         = join(",", data.terraform_remote_state.vpc.outputs.prd_private_subnets)
-    "alb.ingress.kubernetes.io/scheme"          = "internal"
+    "alb.ingress.kubernetes.io/certificate-arn"  = "arn:aws:acm:us-east-1:XXXXXXXXX:certificate/<cert-id>"
+    "alb.ingress.kubernetes.io/security-groups"  = "sg-XXXXXXXXXX"
+    "alb.ingress.kubernetes.io/subnets"          = "subnet-XXXXXXXXX, subnet-XXXXXXXXX, subnet-XXXXXXXXXX"
+    "alb.ingress.kubernetes.io/ssl-redirect"     = "443"
+    "alb.ingress.kubernetes.io/listen-ports"     = "[{\"HTTP\": 80}, {\"HTTPS\": 443}]"
+    "external-dns.alpha.kubernetes.io/hostname"  = var.ingress_hostname
+    "alb.ingress.kubernetes.io/scheme"           = "internal"
   }
 }
-
-```
-
-Below is a screenshot of the running app if the deployment is successful
-
-![](../../../docs/images/InternalAccess.png)

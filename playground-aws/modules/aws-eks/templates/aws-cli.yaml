@@ -1,0 +1,1 @@
+aws eks update-kubeconfig --name ${eks_cluster_name} --region ${aws_region} --alias ${eks_cluster_name}

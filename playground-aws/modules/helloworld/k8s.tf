@@ -28,7 +28,7 @@ resource "kubernetes_deployment_v1" "this" {
           image = "${var.image}:${var.image_tag}"
 
           port {
-            name          = "http"
+            name           = "http"
             container_port = var.container_port
 
           }
@@ -45,7 +45,7 @@ resource "kubernetes_deployment_v1" "this" {
               port = "http"
             }
           }
-          
+
           env {
             name = "KUBERNETES_NAMESPACE"
             value_from {
@@ -76,15 +76,15 @@ resource "kubernetes_service_v1" "this" {
       protocol    = "TCP"
     }
 
-    type = "ClusterIP"
+    type = var.service_type
   }
 }
 
 resource "kubernetes_ingress_v1" "this" {
   count = var.enable_ingress ? 1 : 0
   metadata {
-    name      = var.app_name
-    namespace = kubernetes_namespace_v1.this.metadata[0].name
+    name        = var.app_name
+    namespace   = kubernetes_namespace_v1.this.metadata[0].name
     annotations = local.ingress_annotations
   }
 
