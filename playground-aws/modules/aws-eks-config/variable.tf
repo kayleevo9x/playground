@@ -14,6 +14,12 @@ variable "domain_name" {
   default     = ""
 }
 
+variable "enable_nvidia_device_plugin" {
+  description = "Enable the NVIDIA device plugin for EKS"
+  type        = bool
+  default     = false
+
+}
 variable "tags" {
   description = "A mapping of tags to assign to the resource"
   type        = map(string)
